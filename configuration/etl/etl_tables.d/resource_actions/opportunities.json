@@ -1,0 +1,36 @@
+{
+    "table_definition": {
+        "name": "opportunities",
+        "engine": "InnoDB",
+        "charset": "utf8",
+        "collation": "utf8_unicode_ci",
+        "comment": "Dimension Table for opportunities",
+        "columns": [
+            {
+                "name": "opportunity_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "opportunity_name",
+                "type": "varchar(128)",
+                "nullable": false
+            },
+            {
+                "name": "opportunity_display_name",
+                "type": "varchar(128)",
+                "nullable": false
+            }
+        ],
+        "indexes": [
+            {
+                "name": "PRIMARY",
+                "columns": [
+                    "opportunity_id"
+                ],
+                "is_unique": true
+            }
+        ],
+        "triggers": []
+    }
+}

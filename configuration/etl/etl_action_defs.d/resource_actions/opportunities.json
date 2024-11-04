@@ -1,0 +1,30 @@
+{
+    "table_definition": [
+        {
+            "$ref": "${table_definition_dir}/resource_actions/opportunities.json#/table_definition"
+        }
+    ],
+    "source_query": {
+        "records": {
+            "opportunity_id": "o.opportunity_id",
+            "opportunity_name": "o.opportunity_name",
+            "opportunity_display_name": "o.display_opportunity_name"
+        },
+        "joins": [
+            {
+                "name": "opportunities",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "o"
+            },
+            {
+                "name": "allocations_processes",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "ap",
+                "on": "o.allocations_process_id = ap.allocations_process_id"
+            }
+        ],
+        "where": [
+            "ap.allocations_process_name_abbr = 'NAIRR'"
+        ]
+    }
+}
