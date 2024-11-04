@@ -8,10 +8,10 @@
         "records": {
             "action_resource_id": "ares.action_resource_id",
             "opportunity_id": "o.opportunity_id",
-            "allocation_type_id": "at.allocation_type_id",
+            "allocation_type_id": "o.allocation_type_id",
             "request_master_id": "r.request_master_id",
             "request_id": "r.request_id",
-            "request_type_id": "rtype.request_type",
+            "request_type_id": "r.request_type_id",
             "request_entry_date": "r.entry_date",
             "action_id": "ac.action_id",
             "action_entry_date": "ac.entry_date",
@@ -21,12 +21,12 @@
             "requested": "CASE WHEN ares.RESOURCE_AMOUNT_TYPE_ID = 1 THEN ares.RESOURCE_AMOUNT ELSE null END",
             "awarded": "CASE WHEN ares.RESOURCE_AMOUNT_TYPE_ID = 3 THEN ares.RESOURCE_AMOUNT ELSE null END",
             "recommended": "CASE WHEN ares.RESOURCE_AMOUNT_TYPE_ID = 2 THEN ares.RESOURCE_AMOUNT ELSE null END",
-            "request_is_deleted": "r.is_deleted",
-            "action_is_deleted": "ac.is_deleted"
+            "request_is_deleted": "r.is_deleted::int",
+            "action_is_deleted": "ac.is_deleted::int"
         },
 
         "joins": [{
-            "name": "resource_actions",
+            "name": "action_resources",
             "schema": "${SOURCE_SCHEMA}",
             "alias": "ares"
         },{
