@@ -1,0 +1,64 @@
+{
+    "table_definition": [
+        {
+            "$ref": "${table_definition_dir}/resource_actions/resource_actions_staging.json#/table_definition"
+        }
+    ],
+    "source_query": {
+        "records": {
+            "action_resource_id": "ares.action_resource_id",
+            "opportunity_id": "o.opportunity_id",
+            "allocation_type_id": "at.allocation_type_id",
+            "request_master_id": "r.request_master_id",
+            "request_id": "r.request_id",
+            "request_type_id": "rtype.request_type",
+            "request_entry_date": "r.entry_date",
+            "action_id": "ac.action_id",
+            "action_entry_date": "ac.entry_date",
+            "action_type_id": "ac.action_type_id",
+            "action_status_type_id": "ac.action_status_type_id",
+            "resource_id": "ares.resource_id",
+            "requested": "CASE WHEN ares.RESOURCE_AMOUNT_TYPE_ID = 1 THEN ares.RESOURCE_AMOUNT ELSE null END",
+            "awarded": "CASE WHEN ares.RESOURCE_AMOUNT_TYPE_ID = 3 THEN ares.RESOURCE_AMOUNT ELSE null END",
+            "recommended": "CASE WHEN ares.RESOURCE_AMOUNT_TYPE_ID = 2 THEN ares.RESOURCE_AMOUNT ELSE null END",
+            "request_is_deleted": "r.is_deleted",
+            "action_is_deleted": "ac.is_deleted"
+        },
+
+        "joins": [{
+            "name": "resource_actions",
+            "schema": "${SOURCE_SCHEMA}",
+            "alias": "ares"
+        },{
+            "name": "actions",
+            "schema": "${SOURCE_SCHEMA}",
+            "alias": "ac",
+            "on": "ares.action_id = ac.action_id"
+        },{
+            "name": "requests",
+            "schema": "${SOURCE_SCHEMA}",
+            "alias": "r",
+            "on": "r.request_id = ac.request_id"
+        },{
+            "name": "action_status_types",
+            "schema": "${SOURCE_SCHEMA}",
+            "alias": "a_stat_types",
+            "on": "a_stat_types.action_status_type_id = ac.action_status_type_id"
+        },{
+            "name": "opportunities",
+            "schema": "${SOURCE_SCHEMA}",
+            "alias": "o",
+            "on": "o.opportunity_id = r.opportunity_id"
+        },{
+            "name": "allocations_processes",
+            "schema": "${SOURCE_SCHEMA}",
+            "alias": "alloc_procs",
+            "on": "alloc_procs.allocations_process_id = o.allocations_process_id"
+        }],
+
+        "where": [
+            "alloc_procs.allocations_process_name_abbr = 'NAIRR'",
+            "a_stat_types.action_status_type != 'Incomplete'"
+        ]
+    }
+}

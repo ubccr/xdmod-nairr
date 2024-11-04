@@ -1,0 +1,33 @@
+{
+    "module": "nairr",
+    "defaults": {
+        "global": {
+            "endpoints": {
+                "source": {
+                    "type": "postgres",
+                    "name": "XDCDB xras",
+                    "config": "tgcdbmirror",
+                    "schema": "xras"
+                },
+                "destination": {
+                    "type": "mysql",
+                    "name": "XDMoD Resource Actions",
+                    "config": "datawarehouse",
+                    "schema": "modw_resourceactions",
+                    "create_schema_if_not_exists": true
+                }
+            }
+        }
+    },
+
+    "resource-allocations": [{
+        "name": "ResourceActionsStagingIngestor",
+        "description": "Ingestor for resource actions from XRAS",
+        "namespace": "ETL\\Ingestor",
+        "options_class": "IngestorOptions",
+        "class": "DatabaseIngestor",
+        "definition_file": "resource_actions/resource_actions_staging.json",
+        "enabled": true,
+        "truncate_destination": false
+    }]
+}

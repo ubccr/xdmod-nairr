@@ -1,0 +1,113 @@
+{
+    "table_definition": {
+        "name": "resource_actions_staging",
+        "engine": "InnoDB",
+        "columns": [
+            {
+                "name": "action_resource_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "opportunity_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "allocation_type_id",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "Allocation type e.g. maximize, discover, LRAC, NAIRR, etc"
+            },
+            {
+                "name": "request_master_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "request_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "request_type_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "request_entry_date",
+                "type": "datetime",
+                "nullable": false
+            },
+            {
+                "name": "action_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "action_entry_date",
+                "type": "datetime",
+                "nullable": false
+            },
+            {
+                "name": "action_type_id",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "new / renewal etc"
+            },
+            {
+                "name": "action_status_type_id",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "Approved, Rejected etc"
+            },
+            {
+                "name": "resource_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "requested",
+                "type": "int(11)",
+                "nullable": true
+            },
+            {
+                "name": "awarded",
+                "type": "int(11)",
+                "nullable": true
+            },
+            {
+                "name": "recommended",
+                "type": "int(11)",
+                "nullable": true
+            },
+            {
+                "name": "request_is_deleted",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "action_is_deleted",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "last_modified",
+                "type": "timestamp",
+                "default": "CURRENT_TIMESTAMP",
+                "nullable": false,
+                "extra": "ON UPDATE CURRENT_TIMESTAMP"
+            }
+        ],
+        "indexes": [
+            {
+                "name": "action_resource_id",
+                "columns": [
+                    "action_resource_id"
+                ],
+                "is_unique": false
+            }
+        ],
+        "triggers": []
+    }
+}
