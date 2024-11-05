@@ -6,15 +6,15 @@
     ],
     "source_query": {
         "records": {
-            "action_status_type_id": "as.action_status_type_id",
-            "action_status_type_name": "as.action_status_type",
-            "action_status_type_display_name": "as.display_action_status_type"
+            "action_status_type_id": "ast.action_status_type_id",
+            "action_status_type_name": "ast.action_status_type",
+            "action_status_type_display_name": "ast.display_action_status_type"
         },
         "joins": [
             {
                 "name": "action_status_types",
                 "schema": "${SOURCE_SCHEMA}",
-                "alias": "as"
+                "alias": "ast"
             }
         ],
         "where": [
