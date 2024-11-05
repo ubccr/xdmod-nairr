@@ -1,0 +1,31 @@
+{
+    "table_definition": {
+        "name": "request_masters",
+        "engine": "InnoDB",
+        "charset": "utf8",
+        "collation": "utf8_unicode_ci",
+        "comment": "Dimension Table for request_masters",
+        "columns": [
+            {
+                "name": "request_master_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "request_master_name",
+                "type": "varchar(128)",
+                "nullable": false
+            }
+        ],
+        "indexes": [
+            {
+                "name": "PRIMARY",
+                "columns": [
+                    "request_master_id"
+                ],
+                "is_unique": true
+            }
+        ],
+        "triggers": []
+    }
+}

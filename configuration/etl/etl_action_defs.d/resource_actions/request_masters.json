@@ -1,0 +1,29 @@
+{
+    "table_definition": [
+        {
+            "$ref": "${table_definition_dir}/resource_actions/request_masters.json#/table_definition"
+        }
+    ],
+    "source_query": {
+        "records": {
+            "request_master_id": "rm.request_master_id",
+            "request_master_name": "rm.request_number"
+        },
+        "joins": [
+            {
+                "name": "request_masters",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "rm"
+            },
+            {
+                "name": "allocations_processes",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "ap",
+                "on": "o.allocations_process_id = ap.allocations_process_id"
+            }
+        ],
+        "where": [
+            "ap.allocations_process_name_abbr = 'NAIRR'"
+        ]
+    }
+}
