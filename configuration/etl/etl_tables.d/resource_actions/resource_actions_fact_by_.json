@@ -1,0 +1,214 @@
+{
+    "table_definition": {
+        "name": "resource_actions_fact_by_",
+        "table_prefix": "resource_actions_fact_by_",
+        "engine": "InnoDB",
+        "comment": "Resource Actions aggregated by ${AGGREGATION_UNIT}.",
+        "columns": [
+            {
+                "name": "${AGGREGATION_UNIT}_id",
+                "type": "int(10) unsigned",
+                "nullable": false,
+                "comment": "DIMENSION: The id related to modw.${AGGREGATION_UNIT}s."
+            },
+            {
+                "name": "year",
+                "type": "smallint(5) unsigned",
+                "nullable": false,
+                "comment": "DIMENSION: The year of the ${AGGREGATION_UNIT}"
+            },
+            {
+                "name": "${AGGREGATION_UNIT}",
+                "type": "smallint(5) unsigned",
+                "nullable": false,
+                "comment": "DIMENSION: The ${AGGREGATION_UNIT} of the year."
+            },
+            {
+                "name": "opportunity_id",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "DIMENSION: The opportunity associated with the resource action"
+            },
+            {
+                "name": "allocation_type_id",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "DIMENSION: Allocation type e.g. maximize, discover, LRAC, NAIRR, etc"
+            },
+            {
+                "name": "request_master_id",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "DIMENSION: The Allocation Number e.g. NAIRR001234"
+            },
+            {
+                "name": "request_type_id",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "DIMENSION: The type of the request associated with the action e.g. New, Renewal, etc"
+            },
+            {
+                "name": "pi_person_id",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "DIMENSION: The PI of the request at the time the request was originally made."
+            },
+            {
+                "name": "pi_organization_id",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "DIMENSION: The Organization of the PI of the request at the time the request was originally made."
+            },
+            {
+                "name": "action_type_id",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "DIMENSION: The type of the resource action new / renewal etc"
+            },
+            {
+                "name": "action_status_type_id",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "DIMENSION: The status of the action Approved, Rejected etc"
+            },
+            {
+                "name": "resource_id",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "DIMENSION: The resource associated with the action"
+            },
+            {
+                "name": "resource_type_id",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "DIMENSION: The resource type associated with the action"
+            },
+            {
+                "name": "resource_unit_type_id",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "DIMENSION: The service units for the resource."
+            },
+            {
+                "name": "request_count",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "FACT: The number of requests"
+            },
+            {
+                "name": "action_count",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "FACT: The number of actions"
+            },
+            {
+                "name": "resource_action_count",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "FACT: The number of resource_actions"
+            },
+            {
+                "name": "total_requested",
+                "type": "int(11)",
+                "nullable": true
+            },
+            {
+                "name": "total_awarded",
+                "type": "int(11)",
+                "nullable": true
+            },
+            {
+                "name": "total_recommended",
+                "type": "int(11)",
+                "nullable": true
+            }
+        ],
+        "indexes": [
+            {
+                "name": "index_${AGGREGATION_UNIT}_id",
+                "columns": [
+                    "${AGGREGATION_UNIT}_id"
+                ],
+                "is_unique": false
+            },
+            {
+                "name": "index_opportunity_id",
+                "columns": [
+                    "opportunity_id"
+                ],
+                "is_unique": false
+            },
+            {
+                "name": "index_allocation_type_id",
+                "columns": [
+                    "allocation_type_id"
+                ],
+                "is_unique": false
+            },
+            {
+                "name": "index_request_master_id",
+                "columns": [
+                    "request_master_id"
+                ],
+                "is_unique": false
+            },
+            {
+                "name": "index_request_type_id",
+                "columns": [
+                    "request_type_id"
+                ],
+                "is_unique": false
+            },
+            {
+                "name": "index_pi_person_id",
+                "columns": [
+                    "pi_person_id"
+                ],
+                "is_unique": false
+            },
+            {
+                "name": "index_pi_organization_id",
+                "columns": [
+                    "pi_organization_id"
+                ],
+                "is_unique": false
+            },
+            {
+                "name": "index_action_type_id",
+                "columns": [
+                    "action_type_id"
+                ],
+                "is_unique": false
+            },
+            {
+                "name": "index_action_status_type_id",
+                "columns": [
+                    "action_status_type_id"
+                ],
+                "is_unique": false
+            },
+            {
+                "name": "index_resource_id",
+                "columns": [
+                    "resource_id"
+                ],
+                "is_unique": false
+            },
+            {
+                "name": "index_resource_type_id",
+                "columns": [
+                    "resource_type_id"
+                ],
+                "is_unique": false
+            },
+            {
+                "name": "index_resource_unit_type_id",
+                "columns": [
+                    "resource_unit_type_id"
+                ],
+                "is_unique": false
+            }
+        ],
+        "triggers": []
+    }
+}
