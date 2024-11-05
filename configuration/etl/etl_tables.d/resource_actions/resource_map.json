@@ -1,0 +1,40 @@
+{
+    "table_definition": {
+        "name": "resource_map",
+        "engine": "InnoDB",
+        "charset": "utf8",
+        "collation": "utf8_unicode_ci",
+        "comment": "Mapping of an XRAS resource to XDMoD one.",
+        "columns": [
+            {
+                "name": "xras_resource_id",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "Resource identifier from XRAS"
+            },
+            {
+                "name": "resource_id",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "Resource identifier from modw.resourcefact"
+            }
+        ],
+        "indexes": [
+            {
+                "name": "PRIMARY",
+                "columns": [
+                    "xras_resource_id"
+                ],
+                "is_unique": true
+            },
+            {
+                "name": "index_resource_id",
+                "columns": [
+                    "resource_id"
+                ],
+                "is_unique": true
+            }
+        ],
+        "triggers": []
+    }
+}

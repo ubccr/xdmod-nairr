@@ -27,6 +27,32 @@
     },
     "resource-allocations": [
         {
+            "name": "XrasResourcesDimensionIngestor",
+            "description": "Ingestor for the xras resources dimension from XRAS",
+            "definition_file": "resource_actions/xras_resources.json"
+        },
+        {
+            "name": "ResourceMappingIngestor",
+            "description": "Populate the table that maps XRAS resources to XDMoD resources",
+            "definition_file": "resource_actions/resource_map.json",
+            "endpoints": {
+                "source": {
+                    "type": "mysql",
+                    "name": "XDCDB xras",
+                    "name": "XDMoD Resource Actions",
+                    "config": "datawarehouse",
+                    "schema": "modw_resourceactions"
+                },
+                "destination": {
+                    "type": "mysql",
+                    "name": "XDMoD Resource Actions",
+                    "config": "datawarehouse",
+                    "schema": "modw_resourceactions",
+                    "create_schema_if_not_exists": true
+                }
+            }
+        },
+        {
             "name": "OpportunitiesDimensionIngestor",
             "description": "Ingestor for the opportunities dimension from XRAS",
             "definition_file": "resource_actions/opportunities.json"
@@ -70,11 +96,6 @@
             "name": "XrasOrganizationsDimensionIngestor",
             "description": "Ingestor for the xras organizations dimension from XRAS",
             "definition_file": "resource_actions/xras_organizations.json"
-        },
-        {
-            "name": "XrasResourcesDimensionIngestor",
-            "description": "Ingestor for the xras resources dimension from XRAS",
-            "definition_file": "resource_actions/xras_resources.json"
         }
     ]
 }
