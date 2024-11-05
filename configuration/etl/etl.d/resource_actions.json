@@ -59,6 +59,11 @@
             "name": "ResourceActionsStagingIngestor",
             "description": "Ingestor for resource actions from XRAS",
             "definition_file": "resource_actions/resource_actions_staging.json"
+        },
+        {
+            "name": "XrasPeopleDimensionIngestor",
+            "description": "Ingestor for the xras people dimension from XRAS",
+            "definition_file": "resource_actions/xras_people.json"
         }
     ]
 }

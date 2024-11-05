@@ -1,0 +1,46 @@
+{
+    "table_definition": {
+        "name": "xras_people",
+        "engine": "InnoDB",
+        "charset": "utf8",
+        "collation": "utf8_unicode_ci",
+        "comment": "Dimension Table for xras_people",
+        "columns": [
+            {
+                "name": "xras_person_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "orcid",
+                "type": "char(19)",
+                "nullable": true
+            },
+            {
+                "name": "first_name",
+                "type": "varchar(128)",
+                "nullable": false
+            },
+            {
+                "name": "last_name",
+                "type": "varchar(128)",
+                "nullable": false
+            },
+            {
+                "name": "xras_organization_id",
+                "type": "int(11)",
+                "nullable": false
+            }
+        ],
+        "indexes": [
+            {
+                "name": "PRIMARY",
+                "columns": [
+                    "xras_people_id"
+                ],
+                "is_unique": true
+            }
+        ],
+        "triggers": []
+    }
+}

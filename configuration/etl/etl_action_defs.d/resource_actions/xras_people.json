@@ -1,0 +1,32 @@
+{
+    "table_definition": [
+        {
+            "$ref": "${table_definition_dir}/resource_actions/xras_people.json#/table_definition"
+        }
+    ],
+    "source_query": {
+        "records": {
+            "xras_person_id": "p.person_id",
+            "orcid": "p.username",
+            "first_name": "p.first_name",
+            "last_name": "p.last_name",
+            "xras_organization_id": "p.organization_id"
+        },
+        "joins": [
+            {
+                "name": "people",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "p"
+            },
+            {
+                "name": "allocations_processes",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "ap",
+                "on": "p.allocations_process_id = ap.allocations_process_id"
+            }
+        ],
+        "where": [
+            "ap.allocations_process_name_abbr = 'NAIRR'"
+        ]
+    }
+}
