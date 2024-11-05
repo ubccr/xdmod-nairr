@@ -19,11 +19,12 @@
                 "name": "allocations_processes",
                 "schema": "${SOURCE_SCHEMA}",
                 "alias": "ap",
-                "on": "o.allocations_process_id = ap.allocations_process_id"
+                "on": "rm.allocations_process_id = ap.allocations_process_id"
             }
         ],
         "where": [
-            "ap.allocations_process_name_abbr = 'NAIRR'"
+            "ap.allocations_process_name_abbr = 'NAIRR'",
+            "rm.request_number IS NOT NULL"
         ]
     }
 }
