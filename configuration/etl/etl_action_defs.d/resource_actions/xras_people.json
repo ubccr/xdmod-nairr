@@ -8,9 +8,9 @@
         "records": {
             "xras_person_id": "p.person_id",
             "orcid": "p.username",
-            "first_name": "p.first_name",
-            "last_name": "p.last_name",
-            "xras_organization_id": "p.organization_id"
+            "first_name": "COALESCE(p.first_name, '')",
+            "last_name": "COALESCE(p.last_name, '')",
+            "xras_organization_id": "COALESCE(p.organization_id, -1)"
         },
         "joins": [
             {

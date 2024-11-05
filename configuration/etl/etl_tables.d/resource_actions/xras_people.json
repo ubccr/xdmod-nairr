@@ -36,7 +36,7 @@
             {
                 "name": "PRIMARY",
                 "columns": [
-                    "xras_people_id"
+                    "xras_person_id"
                 ],
                 "is_unique": true
             }
