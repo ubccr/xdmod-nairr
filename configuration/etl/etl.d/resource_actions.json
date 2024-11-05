@@ -2,6 +2,11 @@
     "module": "nairr",
     "defaults": {
         "global": {
+            "truncate_destination": false,
+            "namespace": "ETL\\Ingestor",
+            "class": "DatabaseIngestor",
+            "options_class": "IngestorOptions",
+            "enabled": true,
             "endpoints": {
                 "source": {
                     "type": "postgres",
@@ -21,13 +26,17 @@
     },
 
     "resource-allocations": [{
+        "name": "OpportunitiesDimensionIngestor",
+        "description": "Ingestor for the opportunities dimension from XRAS",
+        "definition_file": "resource_actions/opportunities.json"
+    },{
+        "name": "AllocationTypesDimensionIngestor",
+        "description": "Ingestor for the opportunities dimension from XRAS",
+        "definition_file": "resource_actions/allocation_types.json"
+    },{
         "name": "ResourceActionsStagingIngestor",
         "description": "Ingestor for resource actions from XRAS",
-        "namespace": "ETL\\Ingestor",
-        "options_class": "IngestorOptions",
-        "class": "DatabaseIngestor",
         "definition_file": "resource_actions/resource_actions_staging.json",
-        "enabled": true,
-        "truncate_destination": false
+	"enabled": false
     }]
 }
