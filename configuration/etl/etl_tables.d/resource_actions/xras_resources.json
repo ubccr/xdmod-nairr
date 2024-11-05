@@ -1,0 +1,36 @@
+{
+    "table_definition": {
+        "name": "xras_resources",
+        "engine": "InnoDB",
+        "charset": "utf8",
+        "collation": "utf8_unicode_ci",
+        "comment": "Dimension Table for xras_resources",
+        "columns": [
+            {
+                "name": "xras_resource_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "xras_resource_name",
+                "type": "varchar(128)",
+                "nullable": false
+            },
+            {
+                "name": "xras_resource_display_name",
+                "type": "varchar(128)",
+                "nullable": false
+            }
+        ],
+        "indexes": [
+            {
+                "name": "PRIMARY",
+                "columns": [
+                    "xras_resource_id"
+                ],
+                "is_unique": true
+            }
+        ],
+        "triggers": []
+    }
+}

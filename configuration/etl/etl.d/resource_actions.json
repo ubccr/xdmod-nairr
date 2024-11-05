@@ -70,6 +70,11 @@
             "name": "XrasOrganizationsDimensionIngestor",
             "description": "Ingestor for the xras organizations dimension from XRAS",
             "definition_file": "resource_actions/xras_organizations.json"
+        },
+        {
+            "name": "XrasResourcesDimensionIngestor",
+            "description": "Ingestor for the xras resources dimension from XRAS",
+            "definition_file": "resource_actions/xras_resources.json"
         }
     ]
 }
