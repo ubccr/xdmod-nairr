@@ -1,0 +1,30 @@
+{
+    "table_definition": [
+        {
+            "$ref": "${table_definition_dir}/resource_actions/request_types.json#/table_definition"
+        }
+    ],
+    "source_query": {
+        "records": {
+            "request_type_id": "rt.request_type_id",
+            "request_type_name": "rt.request_type",
+            "request_type_display_name": "rt.display_request_type"
+        },
+        "joins": [
+            {
+                "name": "request_types",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "rt"
+            },
+            {
+                "name": "allocations_processes",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "ap",
+                "on": "rt.allocations_process_id = ap.allocations_process_id"
+            }
+        ],
+        "where": [
+            "ap.allocations_process_name_abbr = 'NAIRR'"
+        ]
+    }
+}

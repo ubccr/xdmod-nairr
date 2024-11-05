@@ -1,0 +1,36 @@
+{
+    "table_definition": {
+        "name": "action_types",
+        "engine": "InnoDB",
+        "charset": "utf8",
+        "collation": "utf8_unicode_ci",
+        "comment": "Dimension Table for action_types",
+        "columns": [
+            {
+                "name": "action_type_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "action_type_name",
+                "type": "varchar(128)",
+                "nullable": false
+            },
+            {
+                "name": "action_type_display_name",
+                "type": "varchar(128)",
+                "nullable": false
+            }
+        ],
+        "indexes": [
+            {
+                "name": "PRIMARY",
+                "columns": [
+                    "action_type_id"
+                ],
+                "is_unique": true
+            }
+        ],
+        "triggers": []
+    }
+}

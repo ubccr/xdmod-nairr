@@ -41,6 +41,21 @@
             "definition_file": "resource_actions/request_masters.json"
         },
         {
+            "name": "RequestTypesDimensionIngestor",
+            "description": "Ingestor for the request types dimension from XRAS",
+            "definition_file": "resource_actions/request_types.json"
+        },
+        {
+            "name": "ActionTypesDimensionIngestor",
+            "description": "Ingestor for the action types dimension from XRAS",
+            "definition_file": "resource_actions/action_types.json"
+        },
+        {
+            "name": "ActionStatusTypesDimensionIngestor",
+            "description": "Ingestor for the action status types dimension from XRAS",
+            "definition_file": "resource_actions/action_status_types.json"
+        },
+        {
             "name": "ResourceActionsStagingIngestor",
             "description": "Ingestor for resource actions from XRAS",
             "definition_file": "resource_actions/resource_actions_staging.json"

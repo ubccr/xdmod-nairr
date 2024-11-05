@@ -1,0 +1,36 @@
+{
+    "table_definition": {
+        "name": "request_types",
+        "engine": "InnoDB",
+        "charset": "utf8",
+        "collation": "utf8_unicode_ci",
+        "comment": "Dimension Table for request_types",
+        "columns": [
+            {
+                "name": "request_type_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "request_type_name",
+                "type": "varchar(128)",
+                "nullable": false
+            },
+            {
+                "name": "request_type_display_name",
+                "type": "varchar(128)",
+                "nullable": false
+            }
+        ],
+        "indexes": [
+            {
+                "name": "PRIMARY",
+                "columns": [
+                    "request_type_id"
+                ],
+                "is_unique": true
+            }
+        ],
+        "triggers": []
+    }
+}
