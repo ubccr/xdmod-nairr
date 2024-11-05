@@ -40,6 +40,16 @@
                 "nullable": false
             },
             {
+                "name": "pi",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "pi_organization",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
                 "name": "action_id",
                 "type": "int(11)",
                 "nullable": false
