@@ -1,0 +1,36 @@
+{
+    "table_definition": {
+        "name": "allocation_types",
+        "engine": "InnoDB",
+        "charset": "utf8",
+        "collation": "utf8_unicode_ci",
+        "comment": "Dimension Table for allocation_types",
+        "columns": [
+            {
+                "name": "allocation_type_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "allocation_type_name",
+                "type": "varchar(128)",
+                "nullable": false
+            },
+            {
+                "name": "allocation_type_display_name",
+                "type": "varchar(128)",
+                "nullable": false
+            }
+        ],
+        "indexes": [
+            {
+                "name": "PRIMARY",
+                "columns": [
+                    "allocation_type_id"
+                ],
+                "is_unique": true
+            }
+        ],
+        "triggers": []
+    }
+}

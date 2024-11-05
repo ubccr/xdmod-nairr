@@ -1,0 +1,30 @@
+{
+    "table_definition": [
+        {
+            "$ref": "${table_definition_dir}/resource_actions/allocation_types.json#/table_definition"
+        }
+    ],
+    "source_query": {
+        "records": {
+            "allocation_type_id": "at.allocation_type_id",
+            "allocation_type_name": "at.allocation_type",
+            "allocation_type_display_name": "at.display_allocation_type"
+        },
+        "joins": [
+            {
+                "name": "allocation_types",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "at"
+            },
+            {
+                "name": "allocations_processes",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "ap",
+                "on": "at.allocations_process_id = ap.allocations_process_id"
+            }
+        ],
+        "where": [
+            "ap.allocations_process_name_abbr = 'NAIRR'"
+        ]
+    }
+}
