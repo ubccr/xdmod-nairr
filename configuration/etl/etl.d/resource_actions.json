@@ -6,6 +6,7 @@
             "namespace": "ETL\\Ingestor",
             "class": "DatabaseIngestor",
             "options_class": "IngestorOptions",
+            "load_data_infile_character_set": "utf8",
             "enabled": true,
             "endpoints": {
                 "source": {
