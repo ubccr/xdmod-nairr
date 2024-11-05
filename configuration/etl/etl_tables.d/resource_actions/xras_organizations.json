@@ -1,0 +1,36 @@
+{
+    "table_definition": {
+        "name": "xras_organizations",
+        "engine": "InnoDB",
+        "charset": "utf8",
+        "collation": "utf8_unicode_ci",
+        "comment": "Dimension Table for xras_organizations",
+        "columns": [
+            {
+                "name": "xras_organization_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "xras_organization_name",
+                "type": "varchar(128)",
+                "nullable": false
+            },
+            {
+                "name": "xras_organization_abbr",
+                "type": "varchar(128)",
+                "nullable": true
+            }
+        ],
+        "indexes": [
+            {
+                "name": "PRIMARY",
+                "columns": [
+                    "xras_organization_id"
+                ],
+                "is_unique": true
+            }
+        ],
+        "triggers": []
+    }
+}

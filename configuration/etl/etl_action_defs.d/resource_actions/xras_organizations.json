@@ -1,0 +1,30 @@
+{
+    "table_definition": [
+        {
+            "$ref": "${table_definition_dir}/resource_actions/xras_organizations.json#/table_definition"
+        }
+    ],
+    "source_query": {
+        "records": {
+            "xras_organization_id": "o.organization_id",
+            "xras_organization_name": "o.organization_name",
+            "xras_organization_abbr": "o.organization_abbr"
+        },
+        "joins": [
+            {
+                "name": "organizations",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "o"
+            },
+            {
+                "name": "allocations_processes",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "ap",
+                "on": "o.allocations_process_id = ap.allocations_process_id"
+            }
+        ],
+        "where": [
+            "ap.allocations_process_name_abbr = 'NAIRR'"
+        ]
+    }
+}

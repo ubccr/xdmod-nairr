@@ -65,6 +65,11 @@
             "name": "XrasPeopleDimensionIngestor",
             "description": "Ingestor for the xras people dimension from XRAS",
             "definition_file": "resource_actions/xras_people.json"
+        },
+        {
+            "name": "XrasOrganizationsDimensionIngestor",
+            "description": "Ingestor for the xras organizations dimension from XRAS",
+            "definition_file": "resource_actions/xras_organizations.json"
         }
     ]
 }
