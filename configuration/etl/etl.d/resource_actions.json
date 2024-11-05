@@ -36,15 +36,14 @@
             "definition_file": "resource_actions/allocation_types.json"
         },
         {
-            "name": "ResourceActionsStagingIngestor",
-            "description": "Ingestor for resource actions from XRAS",
-            "definition_file": "resource_actions/resource_actions_staging.json",
-            "enabled": false
-        },
-        {
             "name": "RequestMastersDimensionIngestor",
             "description": "Ingestor for the request masters dimension from XRAS",
             "definition_file": "resource_actions/request_masters.json"
+        },
+        {
+            "name": "ResourceActionsStagingIngestor",
+            "description": "Ingestor for resource actions from XRAS",
+            "definition_file": "resource_actions/resource_actions_staging.json"
         }
     ]
 }

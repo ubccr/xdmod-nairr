@@ -50,6 +50,11 @@
                 "nullable": false
             },
             {
+                "name": "action_day_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
                 "name": "action_type_id",
                 "type": "int(11)",
                 "nullable": false,
