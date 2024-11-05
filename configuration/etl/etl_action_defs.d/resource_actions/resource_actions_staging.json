@@ -20,8 +20,8 @@
             "action_status_type_id": "ac.action_status_type_id",
             "resource_id": "ares.resource_id",
             "requested": "CASE WHEN ares.RESOURCE_AMOUNT_TYPE_ID = 1 THEN ares.RESOURCE_AMOUNT ELSE null END",
-            "awarded": "CASE WHEN ares.RESOURCE_AMOUNT_TYPE_ID = 3 THEN ares.RESOURCE_AMOUNT ELSE null END",
-            "recommended": "CASE WHEN ares.RESOURCE_AMOUNT_TYPE_ID = 2 THEN ares.RESOURCE_AMOUNT ELSE null END",
+            "recommended": "CASE WHEN ares.RESOURCE_AMOUNT_TYPE_ID = 3 THEN ares.RESOURCE_AMOUNT ELSE null END",
+            "awarded": "CASE WHEN ares.RESOURCE_AMOUNT_TYPE_ID = 2 THEN ares.RESOURCE_AMOUNT ELSE null END",
             "request_is_deleted": "r.is_deleted::int",
             "action_is_deleted": "ac.is_deleted::int"
         },
