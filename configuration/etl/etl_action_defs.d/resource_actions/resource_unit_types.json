@@ -1,21 +1,26 @@
 {
     "table_definition": [
         {
-            "$ref": "${table_definition_dir}/resource_actions/xras_resources.json#/table_definition"
+            "$ref": "${table_definition_dir}/resource_actions/resource_unit_types.json#/table_definition"
         }
     ],
     "source_query": {
         "records": {
-            "xras_resource_id": "res.resource_id",
-            "xras_resource_name": "res.resource_name",
-            "xras_resource_display_name": "res.display_resource_name",
-            "unit_type_id": "res.unit_type_id"
+            "resource_unit_type_id": "ut.unit_type_id",
+            "resource_unit_type_name": "ut.unit_type",
+            "resource_unit_type_display_name": "ut.display_unit_type"
         },
         "joins": [
             {
+                "name": "unit_types",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "ut"
+            },
+            {
                 "name": "resources",
                 "schema": "${SOURCE_SCHEMA}",
-                "alias": "res"
+                "alias": "res",
+                "on": "ut.unit_type_id = res.unit_type_id"
             },
             {
                 "name": "allocations_process_resources",
@@ -32,6 +37,11 @@
         ],
         "where": [
             "ap.allocations_process_name_abbr = 'NAIRR'"
+        ],
+        "groupby": [
+            "ut.unit_type_id",
+            "ut.unit_type",
+            "ut.display_unit_type"
         ]
     }
 }
