@@ -1,0 +1,65 @@
+{
+   "ResourceActions": {
+        "aggregate_schema": "modw_resourceactions",
+        "aggregate_table_alias": "agg",
+        "aggregate_table_prefix": "resource_actions_fact_by_",
+        "datasource": "NAIRR XRAS",
+        "group_bys": {
+            "day": {
+                "$ref": "datawarehouse.d/ref/group-by-time-period.json#/day"
+            },
+            "month": {
+                "$ref": "datawarehouse.d/ref/group-by-time-period.json#/month"
+            },
+            "quarter": {
+                "$ref": "datawarehouse.d/ref/group-by-time-period.json#/quarter"
+            },
+            "year": {
+                "$ref": "datawarehouse.d/ref/group-by-time-period.json#/year"
+            },
+            "none": {
+                "$ref": "datawarehouse.d/ref/group-by-none.json"
+            }
+        },
+        "module": "xdmod",
+        "name": "Resource Actions",
+        "order": 90,
+        "statistics": {
+            "active_pi_count": {
+                "description_html": "The total number of PIs associated with requests for resources.",
+                "formula": "COUNT(DISTINCT(agg.pi_person_id))",
+                "name": "Number of PIs: Active",
+                "precision": 0,
+                "unit": "Number of PIs"
+            },
+            "active_resource_count": {
+                "description_html": "The total number of resources associated with requests.",
+                "formula": "COUNT(DISTINCT(agg.resource_id))",
+                "name": "Number of Resources: Active",
+                "precision": 0,
+                "unit": "Number of Resources"
+            },
+            "total_requested": {
+                "description_html": "The total amount of requested resource units.",
+                "formula": "SUM(COALESCE(agg.total_requested, 0))",
+                "name": "Total Requested",
+                "precision": 0,
+                "unit": "Resource Units"
+            },
+            "total_recommended": {
+                "description_html": "The total amount of recommended resource units.",
+                "formula": "SUM(COALESCE(agg.total_recommended, 0))",
+                "name": "Total Recommended",
+                "precision": 0,
+                "unit": "Resource Units"
+            },
+            "total_awarded": {
+                "description_html": "The total amount of awarded resource units.",
+                "formula": "SUM(agg.total_awarded)",
+                "name": "Total Awarded",
+                "precision": 0,
+                "unit": "Resource Units"
+            }
+        }
+    }
+}
