@@ -1,0 +1,51 @@
+{
+    "day": {
+        "$ref": "datawarehouse.d/ref/group-by-time-period.json#/day"
+    },
+    "month": {
+        "$ref": "datawarehouse.d/ref/group-by-time-period.json#/month"
+    },
+    "quarter": {
+        "$ref": "datawarehouse.d/ref/group-by-time-period.json#/quarter"
+    },
+    "year": {
+        "$ref": "datawarehouse.d/ref/group-by-time-period.json#/year"
+    },
+    "none": {
+        "$ref": "datawarehouse.d/ref/group-by-none.json"
+    },
+    "allocation_type": {
+        "attribute_table_schema": "modw_resourceactions",
+        "attribute_to_aggregate_table_key_map": [
+            {
+                "allocation_type_id": "allocation_type_id"
+            }
+        ],
+        "attribute_values_query": {
+            "joins": [
+                {
+                    "name": "allocation_types"
+                }
+            ],
+            "orderby": [
+                "allocation_type_id"
+            ],
+            "records": {
+                "id": "allocation_type_id",
+                "name": "allocation_type_name",
+                "order_id": "allocation_type_id",
+                "short_name": "allocation_type_display_name"
+            }
+        },
+        "category": "Administrative",
+        "chart_options": {
+            "dataset_display_type": {
+                "aggregate": "bar",
+                "timeseries": "area"
+            }
+        },
+        "data_sort_order": null,
+        "description_html": "The category of project allocation",
+        "name": "Project Type"
+    }
+}

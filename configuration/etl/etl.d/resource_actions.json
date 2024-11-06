@@ -25,7 +25,7 @@
             }
         }
     },
-    "resource-allocations": [
+    "resource-actions": [
         {
             "name": "XrasResourcesDimensionIngestor",
             "description": "Ingestor for the xras resources dimension from XRAS",

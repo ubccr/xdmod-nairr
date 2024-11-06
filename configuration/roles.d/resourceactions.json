@@ -5,6 +5,10 @@
                 {
                     "realm": "ResourceActions",
                     "group_by": "none"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "allocation_type"
                 }
             ]
         },
@@ -13,6 +17,10 @@
                 {
                     "realm": "ResourceActions",
                     "group_by": "none"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "allocation_type"
                 }
             ]
         }

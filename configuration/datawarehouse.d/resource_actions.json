@@ -5,21 +5,7 @@
         "aggregate_table_prefix": "resource_actions_fact_by_",
         "datasource": "NAIRR XRAS",
         "group_bys": {
-            "day": {
-                "$ref": "datawarehouse.d/ref/group-by-time-period.json#/day"
-            },
-            "month": {
-                "$ref": "datawarehouse.d/ref/group-by-time-period.json#/month"
-            },
-            "quarter": {
-                "$ref": "datawarehouse.d/ref/group-by-time-period.json#/quarter"
-            },
-            "year": {
-                "$ref": "datawarehouse.d/ref/group-by-time-period.json#/year"
-            },
-            "none": {
-                "$ref": "datawarehouse.d/ref/group-by-none.json"
-            }
+            "$ref": "datawarehouse.d/ref/ResourceActions-group-bys.json"
         },
         "module": "xdmod",
         "name": "Resource Actions",
