@@ -18,6 +18,13 @@
                 "precision": 0,
                 "unit": "Number of PIs"
             },
+            "active_project_count": {
+                "description_html": "The total number of projects associated with requests for resources.",
+                "formula": "COUNT(DISTINCT(agg.request_master_id))",
+                "name": "Number of Projects: Active",
+                "precision": 0,
+                "unit": "Number of Projects"
+            },
             "active_resource_count": {
                 "description_html": "The total number of resources associated with requests.",
                 "formula": "COUNT(DISTINCT(agg.resource_id))",

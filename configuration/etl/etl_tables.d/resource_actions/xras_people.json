@@ -27,6 +27,16 @@
                 "nullable": false
             },
             {
+                "name": "short_name",
+                "type": "varchar(256)",
+                "nullable": false
+            },
+            {
+                "name": "long_name",
+                "type": "varchar(300)",
+                "nullable": false
+            },
+            {
                 "name": "xras_organization_id",
                 "type": "int(11)",
                 "nullable": false

@@ -79,8 +79,8 @@
             }
         },
         "data_sort_order": null,
-        "description_html": "TODO",
-        "name": "opportunity"
+        "description_html": "The opportunity associated with the project request.",
+        "name": "Opportunity"
     },
     "request_master": {
         "attribute_table_schema": "modw_resourceactions",
@@ -102,7 +102,7 @@
                 "id": "request_master_id",
                 "name": "request_master_name",
                 "order_id": "request_master_id",
-                "short_name": "request_master_display_name"
+                "short_name": "request_master_name"
             }
         },
         "category": "Administrative",
@@ -113,8 +113,8 @@
             }
         },
         "data_sort_order": null,
-        "description_html": "TODO",
-        "name": "request_master"
+        "description_html": "The identifier in XRAS associated with a project.",
+        "name": "Project Identifier"
     },
     "request_type": {
         "attribute_table_schema": "modw_resourceactions",
@@ -147,14 +147,14 @@
             }
         },
         "data_sort_order": null,
-        "description_html": "TODO",
-        "name": "request_type"
+        "description_html": "The type of the request associated with a project",
+        "name": "Project Request Type"
     },
     "pi_xrasperson": {
         "attribute_table_schema": "modw_resourceactions",
         "attribute_to_aggregate_table_key_map": [
             {
-                "pi_person_id": "xras_person_id"
+                "xras_person_id": "pi_person_id"
             }
         ],
         "attribute_values_query": {
@@ -164,13 +164,13 @@
                 }
             ],
             "orderby": [
-                "pi_person_id"
+                "xras_person_id"
             ],
             "records": {
                 "id": "xras_person_id",
-                "name": "CONCAT_WS(' ', first_name, last_name, orcid)",
+                "name": "long_name",
                 "order_id": "xras_person_id",
-                "short_name": "CONCAT_WS(' ', first_name, last_name)"
+                "short_name": "short_name"
             }
         },
         "category": "Administrative",
@@ -249,8 +249,8 @@
             }
         },
         "data_sort_order": null,
-        "description_html": "TODO",
-        "name": "action_type"
+        "description_html": "The type of project action.",
+        "name": "Project Action Type"
     },
     "action_status_type": {
         "attribute_table_schema": "modw_resourceactions",
@@ -283,30 +283,30 @@
             }
         },
         "data_sort_order": null,
-        "description_html": "TODO",
-        "name": "action_status_type"
+        "description_html": "The status of the action associated with a request. Incomplete requests are not included in the data.",
+        "name": "Project Action Status"
     },
     "resource": {
-        "attribute_table_schema": "modw_resourceactions",
+        "attribute_table_schema": "modw",
         "attribute_to_aggregate_table_key_map": [
             {
-                "resource_id": "resource_id"
+                "id": "resource_id"
             }
         ],
         "attribute_values_query": {
             "joins": [
                 {
-                    "name": "resources"
+                    "name": "resourcefact"
                 }
             ],
             "orderby": [
-                "resource_id"
+                "id"
             ],
             "records": {
-                "id": "resource_id",
-                "name": "resource_name",
-                "order_id": "resource_id",
-                "short_name": "resource_display_name"
+                "id": "resourcefact.id",
+                "name": "REPLACE(resourcefact.code, '-', ' ')",
+                "order_id": "id",
+                "short_name": "REPLACE(resourcefact.code, '-', ' ')"
             }
         },
         "category": "Administrative",
@@ -317,10 +317,10 @@
             }
         },
         "data_sort_order": null,
-        "description_html": "TODO",
-        "name": "resource"
+        "description_html": "A resources is a CI entity that can be allocated.",
+        "name": "Resource"
     },
-    "resource_type": {
+    "xrasresource_type": {
         "attribute_table_schema": "modw_resourceactions",
         "attribute_to_aggregate_table_key_map": [
             {
@@ -352,7 +352,7 @@
         },
         "data_sort_order": null,
         "description_html": "TODO",
-        "name": "resource_type"
+        "name": "xrasresource_type"
     },
     "resource_unit_type": {
         "attribute_table_schema": "modw_resourceactions",
@@ -385,7 +385,7 @@
             }
         },
         "data_sort_order": null,
-        "description_html": "TODO",
-        "name": "resource_unit_type"
+        "description_html": "The unit of resource allocation.",
+        "name": "Resource Unit"
     }
 }
