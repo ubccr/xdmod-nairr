@@ -9,6 +9,46 @@
                 {
                     "realm": "ResourceActions",
                     "group_by": "allocation_type"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "opportunity"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "request_master"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "request_type"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "pi_xrasperson"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "pi_xrasorganization"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "action_type"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "action_status_type"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "resource"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "xrasresource_type"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "resource_unit_type"
                 }
             ]
         },
@@ -20,7 +60,47 @@
                 },
                 {
                     "realm": "ResourceActions",
+                    "group_by": "opportunity"
+                },
+                {
+                    "realm": "ResourceActions",
                     "group_by": "allocation_type"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "request_master"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "request_type"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "pi_xrasperson"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "pi_xrasorganization"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "action_type"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "action_status_type"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "resource"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "xrasresource_type"
+                },
+                {
+                    "realm": "ResourceActions",
+                    "group_by": "resource_unit_type"
                 }
             ]
         }

@@ -45,7 +45,347 @@
             }
         },
         "data_sort_order": null,
-        "description_html": "The category of project allocation",
+        "description_html": "The project allocation category.",
         "name": "Project Type"
+    },
+    "opportunity": {
+        "attribute_table_schema": "modw_resourceactions",
+        "attribute_to_aggregate_table_key_map": [
+            {
+                "opportunity_id": "opportunity_id"
+            }
+        ],
+        "attribute_values_query": {
+            "joins": [
+                {
+                    "name": "opportunities"
+                }
+            ],
+            "orderby": [
+                "opportunity_id"
+            ],
+            "records": {
+                "id": "opportunity_id",
+                "name": "opportunity_name",
+                "order_id": "opportunity_id",
+                "short_name": "opportunity_display_name"
+            }
+        },
+        "category": "Administrative",
+        "chart_options": {
+            "dataset_display_type": {
+                "aggregate": "bar",
+                "timeseries": "area"
+            }
+        },
+        "data_sort_order": null,
+        "description_html": "TODO",
+        "name": "opportunity"
+    },
+    "request_master": {
+        "attribute_table_schema": "modw_resourceactions",
+        "attribute_to_aggregate_table_key_map": [
+            {
+                "request_master_id": "request_master_id"
+            }
+        ],
+        "attribute_values_query": {
+            "joins": [
+                {
+                    "name": "request_masters"
+                }
+            ],
+            "orderby": [
+                "request_master_id"
+            ],
+            "records": {
+                "id": "request_master_id",
+                "name": "request_master_name",
+                "order_id": "request_master_id",
+                "short_name": "request_master_display_name"
+            }
+        },
+        "category": "Administrative",
+        "chart_options": {
+            "dataset_display_type": {
+                "aggregate": "bar",
+                "timeseries": "area"
+            }
+        },
+        "data_sort_order": null,
+        "description_html": "TODO",
+        "name": "request_master"
+    },
+    "request_type": {
+        "attribute_table_schema": "modw_resourceactions",
+        "attribute_to_aggregate_table_key_map": [
+            {
+                "request_type_id": "request_type_id"
+            }
+        ],
+        "attribute_values_query": {
+            "joins": [
+                {
+                    "name": "request_types"
+                }
+            ],
+            "orderby": [
+                "request_type_id"
+            ],
+            "records": {
+                "id": "request_type_id",
+                "name": "request_type_name",
+                "order_id": "request_type_id",
+                "short_name": "request_type_display_name"
+            }
+        },
+        "category": "Administrative",
+        "chart_options": {
+            "dataset_display_type": {
+                "aggregate": "bar",
+                "timeseries": "area"
+            }
+        },
+        "data_sort_order": null,
+        "description_html": "TODO",
+        "name": "request_type"
+    },
+    "pi_xrasperson": {
+        "attribute_table_schema": "modw_resourceactions",
+        "attribute_to_aggregate_table_key_map": [
+            {
+                "pi_person_id": "xras_person_id"
+            }
+        ],
+        "attribute_values_query": {
+            "joins": [
+                {
+                    "name": "xras_people"
+                }
+            ],
+            "orderby": [
+                "pi_person_id"
+            ],
+            "records": {
+                "id": "xras_person_id",
+                "name": "CONCAT_WS(' ', first_name, last_name, orcid)",
+                "order_id": "xras_person_id",
+                "short_name": "CONCAT_WS(' ', first_name, last_name)"
+            }
+        },
+        "category": "Administrative",
+        "chart_options": {
+            "dataset_display_type": {
+                "aggregate": "bar",
+                "timeseries": "area"
+            }
+        },
+        "data_sort_order": null,
+        "description_html": "THe PI of the project at the point in time that the project action occurred.",
+        "name": "Project PI"
+    },
+    "pi_organization": {
+        "attribute_table_schema": "modw_resourceactions",
+        "attribute_to_aggregate_table_key_map": [
+            {
+                "pi_organization_id": "pi_organization_id"
+            }
+        ],
+        "attribute_values_query": {
+            "joins": [
+                {
+                    "name": "pi_organizations"
+                }
+            ],
+            "orderby": [
+                "pi_organization_id"
+            ],
+            "records": {
+                "id": "pi_organization_id",
+                "name": "pi_organization_name",
+                "order_id": "pi_organization_id",
+                "short_name": "pi_organization_display_name"
+            }
+        },
+        "category": "Administrative",
+        "chart_options": {
+            "dataset_display_type": {
+                "aggregate": "bar",
+                "timeseries": "area"
+            }
+        },
+        "data_sort_order": null,
+        "description_html": "TODO",
+        "name": "pi_organization"
+    },
+    "action_type": {
+        "attribute_table_schema": "modw_resourceactions",
+        "attribute_to_aggregate_table_key_map": [
+            {
+                "action_type_id": "action_type_id"
+            }
+        ],
+        "attribute_values_query": {
+            "joins": [
+                {
+                    "name": "action_types"
+                }
+            ],
+            "orderby": [
+                "action_type_id"
+            ],
+            "records": {
+                "id": "action_type_id",
+                "name": "action_type_name",
+                "order_id": "action_type_id",
+                "short_name": "action_type_display_name"
+            }
+        },
+        "category": "Administrative",
+        "chart_options": {
+            "dataset_display_type": {
+                "aggregate": "bar",
+                "timeseries": "area"
+            }
+        },
+        "data_sort_order": null,
+        "description_html": "TODO",
+        "name": "action_type"
+    },
+    "action_status_type": {
+        "attribute_table_schema": "modw_resourceactions",
+        "attribute_to_aggregate_table_key_map": [
+            {
+                "action_status_type_id": "action_status_type_id"
+            }
+        ],
+        "attribute_values_query": {
+            "joins": [
+                {
+                    "name": "action_status_types"
+                }
+            ],
+            "orderby": [
+                "action_status_type_id"
+            ],
+            "records": {
+                "id": "action_status_type_id",
+                "name": "action_status_type_name",
+                "order_id": "action_status_type_id",
+                "short_name": "action_status_type_display_name"
+            }
+        },
+        "category": "Administrative",
+        "chart_options": {
+            "dataset_display_type": {
+                "aggregate": "bar",
+                "timeseries": "area"
+            }
+        },
+        "data_sort_order": null,
+        "description_html": "TODO",
+        "name": "action_status_type"
+    },
+    "resource": {
+        "attribute_table_schema": "modw_resourceactions",
+        "attribute_to_aggregate_table_key_map": [
+            {
+                "resource_id": "resource_id"
+            }
+        ],
+        "attribute_values_query": {
+            "joins": [
+                {
+                    "name": "resources"
+                }
+            ],
+            "orderby": [
+                "resource_id"
+            ],
+            "records": {
+                "id": "resource_id",
+                "name": "resource_name",
+                "order_id": "resource_id",
+                "short_name": "resource_display_name"
+            }
+        },
+        "category": "Administrative",
+        "chart_options": {
+            "dataset_display_type": {
+                "aggregate": "bar",
+                "timeseries": "area"
+            }
+        },
+        "data_sort_order": null,
+        "description_html": "TODO",
+        "name": "resource"
+    },
+    "resource_type": {
+        "attribute_table_schema": "modw_resourceactions",
+        "attribute_to_aggregate_table_key_map": [
+            {
+                "resource_type_id": "resource_type_id"
+            }
+        ],
+        "attribute_values_query": {
+            "joins": [
+                {
+                    "name": "resource_types"
+                }
+            ],
+            "orderby": [
+                "resource_type_id"
+            ],
+            "records": {
+                "id": "resource_type_id",
+                "name": "resource_type_name",
+                "order_id": "resource_type_id",
+                "short_name": "resource_type_display_name"
+            }
+        },
+        "category": "Administrative",
+        "chart_options": {
+            "dataset_display_type": {
+                "aggregate": "bar",
+                "timeseries": "area"
+            }
+        },
+        "data_sort_order": null,
+        "description_html": "TODO",
+        "name": "resource_type"
+    },
+    "resource_unit_type": {
+        "attribute_table_schema": "modw_resourceactions",
+        "attribute_to_aggregate_table_key_map": [
+            {
+                "resource_unit_type_id": "resource_unit_type_id"
+            }
+        ],
+        "attribute_values_query": {
+            "joins": [
+                {
+                    "name": "resource_unit_types"
+                }
+            ],
+            "orderby": [
+                "resource_unit_type_id"
+            ],
+            "records": {
+                "id": "resource_unit_type_id",
+                "name": "resource_unit_type_name",
+                "order_id": "resource_unit_type_id",
+                "short_name": "resource_unit_type_display_name"
+            }
+        },
+        "category": "Administrative",
+        "chart_options": {
+            "dataset_display_type": {
+                "aggregate": "bar",
+                "timeseries": "area"
+            }
+        },
+        "data_sort_order": null,
+        "description_html": "TODO",
+        "name": "resource_unit_type"
     }
 }
