@@ -65,6 +65,16 @@
                 "nullable": false
             },
             {
+                "name": "action_resolve_date",
+                "type": "datetime",
+                "nullable": true
+            },
+            {
+                "name": "action_resolve_day_id",
+                "type": "datetime",
+                "nullable": true
+            },
+            {
                 "name": "action_type_id",
                 "type": "int(11)",
                 "nullable": false,
@@ -120,7 +130,7 @@
                 "columns": [
                     "action_resource_id"
                 ],
-                "is_unique": false
+                "is_unique": true
             }
         ],
         "triggers": []

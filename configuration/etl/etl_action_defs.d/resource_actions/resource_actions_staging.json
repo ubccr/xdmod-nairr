@@ -18,6 +18,8 @@
             "action_id": "ac.action_id",
             "action_entry_date": "(ac.entry_date AT TIME ZONE '${TIMEZONE}')::timestamp",
             "action_day_id": "EXTRACT(year FROM (ac.entry_date AT TIME ZONE '${TIMEZONE}')::timestamp) * 100000 + EXTRACT(doy FROM (ac.entry_date AT TIME ZONE '${TIMEZONE}')::timestamp)",
+            "action_resolve_date": "(ac.date_resolved AT TIME ZONE '${TIMEZONE}')::timestamp",
+            "action_resolve_day_id": "EXTRACT(year FROM (ac.date_resolved AT TIME ZONE '${TIMEZONE}')::timestamp) * 100000 + EXTRACT(doy FROM (ac.date_resolved AT TIME ZONE '${TIMEZONE}')::timestamp)",
             "action_type_id": "ac.action_type_id",
             "action_status_type_id": "ac.action_status_type_id",
             "resource_id": "ares.resource_id",
