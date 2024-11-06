@@ -41,13 +41,6 @@
                     "name": "XDMoD Resource Actions",
                     "config": "datawarehouse",
                     "schema": "modw_resourceactions"
-                },
-                "destination": {
-                    "type": "mysql",
-                    "name": "XDMoD Resource Actions",
-                    "config": "datawarehouse",
-                    "schema": "modw_resourceactions",
-                    "create_schema_if_not_exists": true
                 }
             }
         },
@@ -100,6 +93,24 @@
             "name": "ResourceUnitTypesDimensionIngestor",
             "description": "Ingestor for the resource unit types dimension from XRAS",
             "definition_file": "resource_actions/resource_unit_types.json"
+        },
+        {
+            "name": "Aggregation",
+            "endpoints": {
+                "source": {
+                    "type": "mysql",
+                    "name": "XDMoD Resource Actions",
+                    "config": "datawarehouse",
+                    "schema": "modw_resourceactions"
+                }
+            },
+            "namespace": "ETL\\Aggregator",
+            "options_class": "AggregatorOptions",
+            "class": "SimpleAggregator",
+            "description": "Aggregate Resource Actions",
+            "definition_file": "resource_actions/resource_actions_fact_by_.json",
+            "table_prefix": "resource_actions_fact_by_",
+            "aggregation_units": ["day", "month", "quarter", "year"]
         }
     ]
 }

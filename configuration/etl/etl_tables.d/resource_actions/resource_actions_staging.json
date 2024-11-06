@@ -40,12 +40,12 @@
                 "nullable": false
             },
             {
-                "name": "pi",
+                "name": "pi_xras_person_id",
                 "type": "int(11)",
                 "nullable": false
             },
             {
-                "name": "pi_organization",
+                "name": "pi_xras_organization_id",
                 "type": "int(11)",
                 "nullable": false
             },

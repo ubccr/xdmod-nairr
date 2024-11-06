@@ -9,7 +9,8 @@
             "xras_resource_id": "res.resource_id",
             "xras_resource_name": "res.resource_name",
             "xras_resource_display_name": "res.display_resource_name",
-            "unit_type_id": "res.unit_type_id"
+            "resource_type_id": "res.resource_type_id",
+            "resource_unit_type_id": "res.unit_type_id"
         },
         "joins": [
             {
