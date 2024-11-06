@@ -44,7 +44,7 @@
                 },
                 {
                     "realm": "ResourceActions",
-                    "group_by": "xrasresource_type"
+                    "group_by": "resource_xrastype"
                 },
                 {
                     "realm": "ResourceActions",
@@ -96,7 +96,7 @@
                 },
                 {
                     "realm": "ResourceActions",
-                    "group_by": "xrasresource_type"
+                    "group_by": "resource_xrastype"
                 },
                 {
                     "realm": "ResourceActions",

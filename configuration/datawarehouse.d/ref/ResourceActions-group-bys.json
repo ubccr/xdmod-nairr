@@ -320,27 +320,27 @@
         "description_html": "A resources is a CI entity that can be allocated.",
         "name": "Resource"
     },
-    "xrasresource_type": {
+    "resource_xrastype": {
         "attribute_table_schema": "modw_resourceactions",
         "attribute_to_aggregate_table_key_map": [
             {
-                "resource_type_id": "resource_type_id"
+                "xras_resource_type_id": "resource_type_id"
             }
         ],
         "attribute_values_query": {
             "joins": [
                 {
-                    "name": "resource_types"
+                    "name": "xras_resource_types"
                 }
             ],
             "orderby": [
-                "resource_type_id"
+                "xras_resource_type_id"
             ],
             "records": {
-                "id": "resource_type_id",
-                "name": "resource_type_name",
-                "order_id": "resource_type_id",
-                "short_name": "resource_type_display_name"
+                "id": "xras_resource_type_id",
+                "name": "xras_resource_type_name",
+                "order_id": "xras_resource_type_id",
+                "short_name": "xras_resource_type_display_name"
             }
         },
         "category": "Administrative",
@@ -351,8 +351,8 @@
             }
         },
         "data_sort_order": null,
-        "description_html": "TODO",
-        "name": "xrasresource_type"
+        "description_html": "The type of the resource as categorized in the XRAS database.",
+        "name": "Resource Type in XRAS"
     },
     "resource_unit_type": {
         "attribute_table_schema": "modw_resourceactions",
