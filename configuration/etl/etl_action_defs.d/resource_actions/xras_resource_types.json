@@ -1,0 +1,47 @@
+{
+    "table_definition": [
+        {
+            "$ref": "${table_definition_dir}/resource_actions/xras_resource_types.json#/table_definition"
+        }
+    ],
+    "source_query": {
+        "records": {
+            "xras_resource_type_id": "rtypes.resource_type_id",
+            "xras_resource_type_name": "rtypes.resource_type",
+            "xras_resource_type_display_name": "rtypes.display_resource_type"
+        },
+        "joins": [
+            {
+                "name": "resource_types",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "rtypes"
+            },
+            {
+                "name": "resources",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "res",
+                "on": "res.resource_type_id = rtypes.resource_type_id"
+            },
+            {
+                "name": "allocations_process_resources",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "apr",
+                "on": "apr.resource_id = res.resource_id"
+            },
+            {
+                "name": "allocations_processes",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "ap",
+                "on": "apr.allocations_process_id = ap.allocations_process_id"
+            }
+        ],
+        "where": [
+            "ap.allocations_process_name_abbr = 'NAIRR'"
+        ],
+        "groupby": [
+            "rtypes.resource_type_id",
+            "rtypes.resource_type",
+            "rtypes.display_resource_type"
+        ]
+    }
+}

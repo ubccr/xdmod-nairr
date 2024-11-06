@@ -90,6 +90,11 @@
             "definition_file": "resource_actions/xras_organizations.json"
         },
         {
+            "name": "XrasResourceTypesDimensionIngestor",
+            "description": "Ingestor for the xras resource types dimension from XRAS",
+            "definition_file": "resource_actions/xras_resource_types.json"
+        },
+        {
             "name": "ResourceUnitTypesDimensionIngestor",
             "description": "Ingestor for the resource unit types dimension from XRAS",
             "definition_file": "resource_actions/resource_unit_types.json"
@@ -110,7 +115,12 @@
             "description": "Aggregate Resource Actions",
             "definition_file": "resource_actions/resource_actions_fact_by_.json",
             "table_prefix": "resource_actions_fact_by_",
-            "aggregation_units": ["day", "month", "quarter", "year"]
+            "aggregation_units": [
+                "day",
+                "month",
+                "quarter",
+                "year"
+            ]
         }
     ]
 }
