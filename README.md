@@ -27,3 +27,11 @@ cd /tmp
 curl -O https://patch-diff.githubusercontent.com/raw/ubccr/xdmod/pull/1883.patch
 cd /usr/share/xdmod
 patch -p1 < /tmp/1883.patch
+
+# Design Ideas
+
+Groupy Requested Resource?
+Group by Awarded Resource?
+
+
+Could do a group by resource action?
