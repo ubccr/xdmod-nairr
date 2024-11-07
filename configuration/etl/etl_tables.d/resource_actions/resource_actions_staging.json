@@ -50,6 +50,11 @@
                 "nullable": false
             },
             {
+                "name": "day_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
                 "name": "action_id",
                 "type": "int(11)",
                 "nullable": false
@@ -71,7 +76,7 @@
             },
             {
                 "name": "action_resolve_day_id",
-                "type": "datetime",
+                "type": "int(11)",
                 "nullable": true
             },
             {
@@ -85,6 +90,12 @@
                 "type": "int(11)",
                 "nullable": false,
                 "comment": "Approved, Rejected etc"
+            },
+            {
+                "name": "resource_amount_type_id",
+                "type": "int(11)",
+                "nullable": false,
+                "comment": "Requested, Recommended, Awarded"
             },
             {
                 "name": "resource_id",

@@ -13,8 +13,8 @@
             "exclude_resource_codes": "id NOT IN ${VALUE}"
         },
         "conversions": {
-            "start_day_id": "action_day_id",
-            "end_day_id": "action_day_id"
+            "start_day_id": "day_id",
+            "end_day_id": "day_id"
         }
     },
 
@@ -82,7 +82,7 @@
         ],
 
         "where": [
-            "ra.action_day_id BETWEEN ${:PERIOD_START_DAY_ID} AND ${:PERIOD_END_DAY_ID}",
+            "ra.day_id BETWEEN ${:PERIOD_START_DAY_ID} AND ${:PERIOD_END_DAY_ID}",
             "ra.request_is_deleted = 0",
             "ra.action_is_deleted = 0"
         ]

@@ -11,7 +11,6 @@ JOIN "xras"."allocations_process_resources" AS APRES ON RES.RESOURCE_ID = APRES.
 JOIN "xras"."allocations_processes" AS AP ON AP.ALLOCATIONS_PROCESS_ID = APRES.ALLOCATIONS_PROCESS_ID
 LEFT JOIN "xras"."resource_types" AS RTYPE ON RTYPE.RESOURCE_TYPE_ID = RES.RESOURCE_TYPE_ID
 WHERE AP.ALLOCATIONS_PROCESS_NAME = 'National Artificial Intelligence Research Resource'
-	AND RTYPE.RESOURCE_TYPE != 'Program'
 	AND RES.PRODUCTION_BEGIN_DATE IS NOT NULL
 ORDER BY RES.PRODUCTION_BEGIN_DATE ASC,
 	RES.RESOURCE_NAME ASC
@@ -25,7 +24,8 @@ import configparser
 
 rtype_map = {
         'Compute': 'HPC',
-        'Cloud': 'Cloud'
+        'Cloud': 'Cloud',
+        'Program': 'Program'
 }
 
 def demangle_name(inname):
