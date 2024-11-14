@@ -2,6 +2,7 @@
 
 ```
 dnf install -y php-pgsql
+yum install --enablerepo "powertools" python3-matplotlib python3-pandas
 ```
 
 # Postrequsites
