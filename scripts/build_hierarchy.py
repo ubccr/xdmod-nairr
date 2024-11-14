@@ -3,13 +3,14 @@ import json
 import re
 import argparse
 import configparser
+import csv
 
 import psycopg2
 
 project_pinames_query = """
 SELECT LOWER(RM.REQUEST_NUMBER),
-	P.FIRST_NAME,
-	P.LAST_NAME
+	TRIM(both ' ' from P.FIRST_NAME),
+	TRIM(both ' ' from P.LAST_NAME)
 FROM XRAS.REQUESTS R
 LEFT JOIN XRAS.REQUEST_MASTERS RM ON RM.REQUEST_MASTER_ID = R.REQUEST_MASTER_ID
 LEFT JOIN XRAS.REQUEST_PEOPLE_ROLES RPR ON R.REQUEST_ID = RPR.REQUEST_ID
@@ -21,6 +22,7 @@ WHERE AP.ALLOCATIONS_PROCESS_NAME_ABBR = '{}'
 	AND RRT.REQUEST_ROLE_TYPE = 'PI'
 	AND RM.REQUEST_NUMBER IS NOT NULL
 	AND RPR.END_DATE IS NULL
+        AND (P.FIRST_NAME IS NOT NULL OR P.LAST_NAME IS NOT NULL)
 GROUP BY 1,2,3
 """
 
@@ -32,6 +34,7 @@ def main():
         description="Build names.csv and hierarchy.csv files from XRAS data"
     )
     parser.add_argument('--xdmod_config_path', help='Path to the XDMoD configuration directory.', default='/etc/xdmod')
+    parser.add_argument('--allocs_process', help='Allocations process from XRAS', default='NAIRR')
     args = parser.parse_args()
     
     config = configparser.ConfigParser()
@@ -49,7 +52,8 @@ def main():
             with open("names.csv", "w") as namesfp:
                 writer = csv.writer(namesfp)
                 for data in curs:
-                    writer.writerow(data)
+                    if data[1] and data[2]:
+                        writer.writerow(data)
 
 if __name__ == "__main__":
     main()
