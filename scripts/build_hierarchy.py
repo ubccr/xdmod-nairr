@@ -10,7 +10,7 @@ import psycopg2
 project_pinames_query = """
 SELECT LOWER(RM.REQUEST_NUMBER),
 	TRIM(both ' ' from P.FIRST_NAME),
-	TRIM(both ' ' from P.LAST_NAME)
+	CONCAT(TRIM(both ' ' from P.LAST_NAME), ' (PI)')
 FROM XRAS.REQUESTS R
 LEFT JOIN XRAS.REQUEST_MASTERS RM ON RM.REQUEST_MASTER_ID = R.REQUEST_MASTER_ID
 LEFT JOIN XRAS.REQUEST_PEOPLE_ROLES RPR ON R.REQUEST_ID = RPR.REQUEST_ID
@@ -52,8 +52,7 @@ def main():
             with open("names.csv", "w") as namesfp:
                 writer = csv.writer(namesfp)
                 for data in curs:
-                    if data[1] and data[2]:
-                        writer.writerow(data)
+                    writer.writerow(data)
 
 if __name__ == "__main__":
     main()
