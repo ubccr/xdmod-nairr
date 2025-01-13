@@ -22,9 +22,12 @@ on a NAIRR allocated resource. Where system username is the username that appear
 the resource manager logs. For example, for the slurm resource manager this will be the `User`
 field from the `sacct` command.
 
-[Example Username Mapping \(JSON format\)](examples/person_map.json]
+Mapping information must be UTF-8 encoded in JSON format. All timestamps must be in UTC. We support both JSON 
+or JSON lines format.
 
-[Example Username Mapping \(JSON Lines format\)](examples/person_map.jsonl]
+[Example Username Mapping \(JSON format\)](examples/person_map.json)
+
+[Example Username Mapping \(JSON Lines format\)](examples/person_map.jsonl)
 
 ## Project name mapping
 
@@ -33,9 +36,12 @@ identifier in the resource manager logs. For example, if a compute resource is u
 slurm and using slurm accounts to manage access then Metrics need the mapping
 between the NAIRR project `NAIRRxxxxxx` the `Account` field form the `sacct` command.
 
-[Example Project Mapping \(JSON format\)](examples/project_map.json]
+Mapping information must be UTF-8 encoded in JSON format. All timestamps must be in UTC. We support both JSON 
+or JSON lines format.
 
-[Example Project Mapping \(JSON Lines format\)](examples/project_map.jsonl]
+[Example Project Mapping \(JSON format\)](examples/project_map.json)
+
+[Example Project Mapping \(JSON Lines format\)](examples/project_map.jsonl)
 
 # Sending Data to Metrics
 
