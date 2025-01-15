@@ -6,7 +6,7 @@
                     "realm": "Jobs",
                     "group_by": "none"
                 },
-		{
+                {
                     "realm": "Jobs",
                     "group_by": "allocation"
                 },
@@ -73,42 +73,54 @@
             ],
             "+summary_charts": [
                 {
+                    "trend_line": false,
+                    "swap_xy": false,
+                    "share_y_axis": false,
+                    "hide_tooltip": false,
+                    "show_remainder": false,
+                    "timeseries": true,
+                    "title": "GPU Hours on HPC Resources",
+                    "legend_type": "bottom_center",
+                    "font_size": 3,
+                    "show_filters": true,
+                    "show_warnings": true,
                     "data_series": {
                         "data": [
                             {
+                                "group_by": "resource",
+                                "color": "auto",
+                                "log_scale": false,
+                                "std_err": false,
+                                "value_labels": false,
+                                "display_type": "area",
                                 "combine_type": "stack",
-                                "display_type": "column",
+                                "sort_type": "value_desc",
+                                "ignore_global": false,
+                                "long_legend": true,
+                                "x_axis": false,
+                                "has_std_err": false,
+                                "trend_line": false,
+                                "line_type": "Solid",
+                                "line_width": 2,
+                                "shadow": false,
                                 "filters": {
                                     "data": [],
                                     "total": 0
                                 },
-                                "group_by": "resource",
-                                "has_std_err": false,
-                                "id": 0.00000000000001,
-                                "ignore_global": false,
-                                "log_scale": false,
-                                "long_legend": true,
-                                "metric": "total_cpu_hours",
+                                "z_index": 0,
+                                "visibility": null,
+                                "enabled": true,
+                                "metric": "total_gpu_hours",
                                 "realm": "Jobs",
-                                "sort_type": "value_desc",
-                                "std_err": false,
-                                "value_labels": false,
-                                "x_axis": false
+                                "id": -4902293014706671
                             }
                         ],
                         "total": 1
                     },
-                    "global_filters": {
-                        "data": [],
-                        "total": 0
-                    },
-                    "legend_type": "right_center",
-                    "limit": 10,
-                    "show_filters": true,
+                    "aggregation_unit": "Auto",
+                    "timeframe_label": "Previous month",
                     "start": 0,
-                    "timeseries": true,
-                    "timeframe": "Year to date",
-                    "title": "Total CPU Hours By Resource (Top 10)"
+                    "limit": 10
                 },
                 {
                     "data_series": {
@@ -122,7 +134,7 @@
                                 },
                                 "group_by": "jobsize",
                                 "has_std_err": false,
-                                "id": 0.00000000000002,
+                                "id": 2E-14,
                                 "ignore_global": false,
                                 "log_scale": false,
                                 "long_legend": true,
@@ -159,7 +171,7 @@
                                 },
                                 "group_by": "none",
                                 "has_std_err": true,
-                                "id": 0.00000000000003,
+                                "id": 3E-14,
                                 "ignore_global": false,
                                 "log_scale": false,
                                 "long_legend": true,
@@ -196,7 +208,7 @@
                                 },
                                 "group_by": "pi",
                                 "has_std_err": true,
-                                "id": 0.00000000000004,
+                                "id": 4E-14,
                                 "ignore_global": false,
                                 "log_scale": false,
                                 "long_legend": true,
