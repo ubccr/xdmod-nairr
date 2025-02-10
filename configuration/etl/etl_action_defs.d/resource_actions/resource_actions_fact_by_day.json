@@ -1,0 +1,91 @@
+{
+    "table_definition": [
+        {
+            "$ref": "${table_definition_dir}/resource_actions/resource_actions_fact_by_day.json#/table_definition"
+        }
+    ],
+
+    "aggregation_period_query": {
+        "overseer_restrictions": {
+            "last_modified_start_date": "last_modified >= ${VALUE}",
+            "last_modified_end_date": "last_modified <= ${VALUE}",
+            "include_only_resource_codes": "id IN ${VALUE}",
+            "exclude_resource_codes": "id NOT IN ${VALUE}"
+        },
+        "conversions": {
+            "start_day_id": "day_id",
+            "end_day_id": "day_id"
+        }
+    },
+
+    "source_query": {
+        "query_hint": "SQL_NO_CACHE",
+
+        "records": {
+            "${AGGREGATION_UNIT}_id": "${:PERIOD_ID}",
+            "year": "${:YEAR_VALUE}",
+            "${AGGREGATION_UNIT}": "${:PERIOD_VALUE}",
+            "opportunity_id": "ra.opportunity_id",
+            "allocation_type_id": "ra.allocation_type_id",
+            "request_master_id": "ra.request_master_id",
+            "request_type_id": "ra.request_type_id",
+            "pi_person_id": "ra.pi_xras_person_id",
+            "pi_organization_id": "ra.pi_xras_organization_id",
+            "action_type_id": "ra.action_type_id",
+            "action_status_type_id": "ra.action_status_type_id",
+            "resource_id": "rmap.resource_id",
+            "resource_type_id": "xras_res.resource_type_id",
+            "resource_unit_type_id": "xras_res.resource_unit_type_id" ,
+            "request_count": "COUNT(DISTINCT ra.request_id)",
+            "action_count": "COUNT(DISTINCT ra.action_id)",
+            "resource_action_count": "SUM(1)",
+            "total_requested": "SUM(ra.requested)",
+            "total_awarded": "SUM(ra.awarded)",
+            "total_recommended": "SUM(ra.recommended)",
+            "action_id_list": "GROUP_CONCAT(DISTINCT ra.action_resource_id)"
+        },
+
+        "groupby": [
+            "${AGGREGATION_UNIT}_id",
+            "year",
+            "${AGGREGATION_UNIT}",
+            "opportunity_id",
+            "allocation_type_id",
+            "request_master_id",
+            "request_type_id",
+            "pi_person_id",
+            "pi_organization_id",
+            "action_type_id",
+            "action_status_type_id",
+            "resource_id",
+            "resource_type_id",
+            "resource_unit_type_id"
+        ],
+
+        "joins": [
+            {
+                "name": "resource_actions_staging",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "ra"
+            },
+            {
+                "name": "resource_map",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "rmap",
+                "on": "ra.resource_id = rmap.xras_resource_id"
+            },
+            {
+                "name": "xras_resources",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "xras_res",
+                "on": "ra.resource_id = xras_res.xras_resource_id"
+            }
+        ],
+
+        "where": [
+            "ra.day_id BETWEEN ${:PERIOD_START_DAY_ID} AND ${:PERIOD_END_DAY_ID}",
+            "ra.request_is_deleted = 0",
+            "ra.action_is_deleted = 0"
+        ]
+    }
+}

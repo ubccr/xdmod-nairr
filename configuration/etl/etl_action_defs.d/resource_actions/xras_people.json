@@ -12,6 +12,7 @@
             "last_name": "COALESCE(p.last_name, '')",
             "short_name": "CONCAT_WS(' ', p.first_name, p.last_name)",
             "long_name": "CONCAT(p.first_name, ' ', p.last_name, ' (', p.username, ')' )",
+            "email": "COALESCE(p.email, 'Unknown')",
             "xras_organization_id": "COALESCE(p.organization_id, -1)"
         },
         "joins": [

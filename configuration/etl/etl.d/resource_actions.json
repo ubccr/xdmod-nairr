@@ -25,6 +25,18 @@
             }
         }
     },
+    "resource-actions-bootstrap": [
+        {
+            "name": "create-tables",
+            "description": "Create tables",
+            "namespace": "ETL\\Maintenance",
+            "class": "ManageTables",
+            "options_class": "MaintenanceOptions",
+            "definition_file_list": [
+                "resource_actions/resource_actions_fact_by_day_joblist.json"
+            ]
+        }
+    ],
     "resource-actions": [
         {
             "name": "XrasResourcesDimensionIngestor",
@@ -100,6 +112,43 @@
             "definition_file": "resource_actions/resource_unit_types.json"
         },
         {
+            "name": "DayAggregation",
+            "endpoints": {
+                "source": {
+                    "type": "mysql",
+                    "name": "XDMoD Resource Actions",
+                    "config": "datawarehouse",
+                    "schema": "modw_resourceactions"
+                }
+            },
+            "namespace": "ETL\\Aggregator",
+            "options_class": "AggregatorOptions",
+            "class": "JobListAggregator",
+            "description": "Aggregate Resource Actions",
+            "definition_file": "resource_actions/resource_actions_fact_by_day.json",
+            "table_prefix": "resource_actions_fact_by_",
+            "aggregation_units": ["day"]
+        },
+        {
+            "name": "aggregation-joblist",
+            "namespace": "ETL\\Ingestor",
+            "class": "ExplodeTransformIngestor",
+            "options_class": "IngestorOptions",
+            "definition_file": "resource_actions/resource_actions_fact_by_day_joblist.json",
+            "description": "Populate the job list table, which contains the back references from the aggregates table to the fact table",
+            "explode_column": {
+                "action_id_list": "action_resource_id"
+            },
+            "endpoints": {
+                "source": {
+                    "type": "mysql",
+                    "name": "XDMoD Resource Actions",
+                    "config": "datawarehouse",
+                    "schema": "modw_resourceactions"
+                }
+            }
+        },
+        {
             "name": "Aggregation",
             "endpoints": {
                 "source": {
@@ -116,7 +165,6 @@
             "definition_file": "resource_actions/resource_actions_fact_by_.json",
             "table_prefix": "resource_actions_fact_by_",
             "aggregation_units": [
-                "day",
                 "month",
                 "quarter",
                 "year"

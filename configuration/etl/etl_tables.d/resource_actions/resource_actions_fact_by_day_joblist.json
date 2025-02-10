@@ -1,0 +1,39 @@
+{
+    "table_definition": {
+        "name": "resource_actions_fact_by_day_joblist",
+        "engine": "InnoDB",
+        "columns": [
+            {
+                "name": "agg_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "action_resource_id",
+                "type": "int(11)",
+                "nullable": false
+            }
+        ],
+        "indexes": [
+            {
+                "name": "PRIMARY",
+                "columns": [
+                    "agg_id",
+                    "action_resource_id"
+                ],
+                "type": "BTREE",
+                "is_unique": true
+            },
+            {
+                "name": "job_lookup_key",
+                "columns": [
+                    "action_resource_id",
+                    "agg_id"
+                ],
+                "type": "BTREE",
+                "is_unique": true
+            }
+        ],
+        "triggers": []
+    }
+}

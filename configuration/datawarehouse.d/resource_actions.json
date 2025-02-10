@@ -51,7 +51,8 @@
                 "formula": "SUM(agg.total_awarded)",
                 "name": "Total Awarded",
                 "precision": 0,
-                "unit": "Resource Units"
+                "unit": "Resource Units",
+                "additional_where_condition": [ "total_awarded", "IS NOT", "NULL" ]
             }
         }
     }

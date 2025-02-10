@@ -1,0 +1,109 @@
+{
+    "+realms": [
+        {
+            "name": "ResourceActions",
+            "display": "Resource Actions"
+        }
+    ],
+    "ResourceActions": {
+        "tables": [
+            {
+                "schema": "modw_resourceactions",
+                "name": "resource_actions_fact_by_day_joblist",
+                "alias": "jl",
+                "join": {
+                    "primaryKey": "agg_id",
+                    "foreignTableAlias": "agg",
+                    "foreignKey": "id"
+                }
+            },
+            {
+                "schema": "modw_resourceactions",
+                "name": "resource_actions_staging",
+                "alias": "jt",
+                "join": {
+                    "primaryKey": "action_resource_id",
+                    "foreignTableAlias": "jl",
+                    "foreignKey": "action_resource_id"
+                }
+            },
+            {
+                "schema": "modw_resourceactions",
+                "name": "request_masters",
+                "alias": "rm",
+                "join": {
+                    "primaryKey": "request_master_id",
+                    "foreignTableAlias": "jt",
+                    "foreignKey": "request_master_id"
+                }
+            },
+            {
+                "schema": "modw_resourceactions",
+                "name": "xras_people",
+                "alias": "xp",
+                "join": {
+                    "primaryKey": "xras_person_id",
+                    "foreignTableAlias": "jt",
+                    "foreignKey": "pi_xras_person_id"
+                }
+            },
+            {
+                "schema": "modw_resourceactions",
+                "name": "xras_organizations",
+                "alias": "xr",
+                "join": {
+                    "primaryKey": "xras_organization_id",
+                    "foreignTableAlias": "jt",
+                    "foreignKey": "pi_xras_organization_id"
+                }
+            },
+            {
+                "schema": "modw",
+                "name": "resourcefact",
+                "alias": "rf",
+                "join": {
+                    "primaryKey": "id",
+                    "foreignTableAlias": "agg",
+                    "foreignKey": "resource_id"
+                }
+            }
+        ],
+        "fields": [
+            {
+                "name": "Resource",
+                "formula": "REPLACE(rf.code, '-', ' ')",
+                "group": "Administration",
+                "documentation": "The Resource",
+                "batchExport": true
+            },
+            {
+                "name": "Project Identifier",
+                "formula": "rm.request_master_name",
+                "group": "Administration",
+                "documentation": "The project identifier",
+                "batchExport": true
+            },
+            {
+                "name": "PI first Name",
+                "formula": "xp.first_name",
+                "group": "Administration",
+                "documentation": "Project PI First Name",
+                "batchExport": true
+            },
+            {
+                "name": "PI Last Name",
+                "formula": "xp.last_name",
+                "group": "Administration",
+                "documentation": "Project PI Last Name",
+                "batchExport": true
+            },
+            {
+                "name": "PI Email",
+                "formula": "xp.email",
+                "group": "Administration",
+                "documentation": "Project PI email address",
+                "batchExport": true
+            }
+        ]
+    }
+}

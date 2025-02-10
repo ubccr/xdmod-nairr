@@ -37,6 +37,11 @@
                 "nullable": false
             },
             {
+                "name": "email",
+                "type": "varchar(300)",
+                "nullable": false
+            },
+            {
                 "name": "xras_organization_id",
                 "type": "int(11)",
                 "nullable": false

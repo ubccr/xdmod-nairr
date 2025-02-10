@@ -1,0 +1,161 @@
+<?php
+namespace DataWarehouse\Query\ResourceActions;
+
+use DataWarehouse\Data\RawStatisticsConfiguration;
+use DataWarehouse\Query\Model\FormulaField;
+use DataWarehouse\Query\Model\Schema;
+use DataWarehouse\Query\Model\Table;
+use DataWarehouse\Query\Model\TableField;
+use DataWarehouse\Query\Model\WhereCondition;
+use Exception;
+
+/**
+  * @see DataWarehouse::Query::RawQuery
+  */
+class JobDataset extends \DataWarehouse\Query\RawQuery
+{
+    private $documentation = array();
+
+    public function __construct(
+        array $parameters,
+        $stat = "all"
+    ) {
+        parent::__construct('ResourceActions', 'modw_resourceactions', 'resource_actions_fact_by_day', array());
+
+        // The same fact table row may correspond to multiple rows in the
+        // aggregate table (e.g. a job that runs over two days).
+        $this->setDistinct(true);
+
+        $config = RawStatisticsConfiguration::factory();
+
+        // The data table is always aliased to "agg".
+        $tables = ['agg' => $this->getDataTable()];
+
+        foreach ($config->getQueryTableDefinitions('ResourceActions') as $tableDef) {
+            $alias = $tableDef['alias'];
+            $table = new Table(
+                new Schema($tableDef['schema']),
+                $tableDef['name'],
+                $alias
+            );
+            $tables[$alias] = $table;
+            $this->addTable($table);
+
+            $join = $tableDef['join'];
+            $this->addWhereCondition(new WhereCondition(
+                new TableField($table, $join['primaryKey']),
+                '=',
+                new TableField($tables[$join['foreignTableAlias']], $join['foreignKey'])
+            ));
+        }
+
+        // This table is defined in the configuration file, but used in the section below.
+        $factTable = $tables['jt'];
+
+        if (isset($parameters['primary_key'])) {
+            $this->addPdoWhereCondition(new WhereCondition(new TableField($factTable, 'action_resource_id'), "=", $parameters['primary_key']));
+        } elseif (isset($parameters['job_identifier'])) {
+            throw Exception("TODO");
+        } elseif (isset($parameters['start_date']) && isset($parameters['end_date'])) {
+            $startDate = date_parse_from_format('Y-m-d', $parameters['start_date']);
+            $startDateTs = mktime(
+                0,
+                0,
+                0,
+                $startDate['month'],
+                $startDate['day'],
+                $startDate['year']
+            );
+            if ($startDateTs === false) {
+                throw new Exception('invalid "start_date" query parameter');
+            }
+
+            $endDate = date_parse_from_format('Y-m-d', $parameters['end_date']);
+            $endDateTs = mktime(
+                23,
+                59,
+                59,
+                $endDate['month'],
+                $endDate['day'],
+                $endDate['year']
+            );
+            if ($endDateTs === false) {
+                throw new Exception('invalid "end_date" query parameter');
+            }
+
+            $startDayId = (
+                date('Y', $startDateTs) * 100000
+                + date('z', $startDateTs) + 1
+            );
+            $endDayId = (
+                date('Y', $endDateTs) * 100000
+                + date('z', $endDateTs) + 1
+            );
+            $aggDayIdField = new TableField($tables['agg'], 'day_id');
+            $this->addWhereCondition(
+                new WhereCondition($aggDayIdField, '>=', $startDayId)
+            );
+            $this->addWhereCondition(
+                new WhereCondition($aggDayIdField, '<=', $endDayId)
+            );
+            if ($startDayId === $endDayId) {
+                // In this case, only jobs that ended on a single specific day
+                // are being requested, so there will not be any duplicate rows
+                // from jobs spanning multiple days. Thus, remove the DISTINCT
+                // constraint and thereby speed up the query.
+                $this->setDistinct(false);
+            }
+        } else {
+            throw new Exception('invalid query parameters');
+        }
+
+        if ($stat == "accounting" || $stat == 'batch') {
+            foreach ($config->getQueryFieldDefinitions('ResourceActions') as $field) {
+                $alias = $field['name'];
+                if (isset($field['tableAlias']) && isset($field['column'])) {
+                    $this->addField(new TableField(
+                        $tables[$field['tableAlias']],
+                        $field['column'],
+                        $alias
+                    ));
+                } elseif (isset($field['formula'])) {
+                    $this->addField(new FormulaField($field['formula'], $alias));
+                } else {
+                    throw new Exception(sprintf(
+                        'Missing tableAlias and column or formula for "%s", definition: %s',
+                        $alias,
+                        json_encode($field)
+                    ));
+                }
+                $this->documentation[$alias] = $field;
+            }
+        } else {
+            $this->addField(new TableField($factTable, "job_id", "jobid"));
+            $this->addField(new TableField($factTable, "local_jobid", "local_job_id"));
+
+            $rt = new Table(new Schema("modw"), "resourcefact", "rf");
+            $this->joinTo($rt, "task_resource_id", "code", "resource");
+
+            $pt = new Table(new Schema('modw'), 'person', 'p');
+            $this->joinTo($pt, "person_id", "long_name", "name");
+
+            $st = new Table(new Schema('modw'), 'systemaccount', 'sa');
+            $this->joinTo($st, "systemaccount_id", "username", "username");
+        }
+    }
+
+    /**
+     * helper function to join the data table to another table
+     */
+    private function joinTo($othertable, $joinkey, $otherkey, $colalias, $idcol = "id")
+    {
+        $this->addTable($othertable);
+        $this->addWhereCondition(new WhereCondition(new TableField($this->getDataTable(), $joinkey), '=', new TableField($othertable, $idcol)));
+        $this->addField(new TableField($othertable, $otherkey, $colalias));
+    }
+
+    public function getColumnDocumentation()
+    {
+        return $this->documentation;
+    }
+}
