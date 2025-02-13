@@ -18,7 +18,7 @@ def fileiterator(datasource):
     for filename in filenames:
         try:
             fdate = datetime.datetime.strptime(filename, '%Y-%m-%d.json')
-            if now - fdate > datetime.timedelta(days=30):
+            if now - fdate > datetime.timedelta(days=10000):
                 logging.debug('Skip %s due to time range', filename)
                 continue
         except ValueError:
@@ -37,7 +37,7 @@ def main():
     logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s', datefmt='%Y-%m-%dT%H:%M:%S', level=logging.WARNING)
     logging.captureWarnings(True)
 
-    mapping_data = pd.read_excel('/user/jpwhite4/NAIRR usage reported as of 12-09-2024.xlsx', sheet_name='NCSA')
+    mapping_data = pd.read_excel('/user/jpwhite4/NAIRR Jan-2025 Usage.xlsx', sheet_name='NCSA')
 
 
     mapping = {}
@@ -48,7 +48,11 @@ def main():
 
         with open(fullpath, "r", encoding='utf-8', errors='ignore') as filep:
             
-            slurm_log = json.load(filep)
+            try:
+                slurm_log = json.load(filep)
+            except json.decoder.JSONDecodeError:
+                logging.warning("Unable to JSON decode " + fullpath)
+                continue
 
             outdata = {}
 
