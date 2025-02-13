@@ -29,6 +29,16 @@
             },
             {
                 "schema": "modw_resourceactions",
+                "name": "action_allocation_dates",
+                "alias": "ad",
+                "join": {
+                    "primaryKey": "action_id",
+                    "foreignTableAlias": "jt",
+                    "foreignKey": "action_id"
+                }
+            },
+            {
+                "schema": "modw_resourceactions",
                 "name": "request_masters",
                 "alias": "rm",
                 "join": {
@@ -102,6 +112,20 @@
                 "formula": "xp.email",
                 "group": "Administration",
                 "documentation": "Project PI email address",
+                "batchExport": true
+            },
+            {
+                "name": "Allocation Begin Date",
+                "formula": "COALESCE(ad.begin_date, 'N/A')",
+                "group": "Administration",
+                "documentation": "The start date of the allocation",
+                "batchExport": true
+            },
+            {
+                "name": "Allocation End Date",
+                "formula": "COALESCE(ad.end_date, 'N/A')",
+                "group": "Administration",
+                "documentation": "The end date of the allocation",
                 "batchExport": true
             }
         ]
