@@ -1,0 +1,63 @@
+{
+    "module": "cloudbank",
+    "+roles": {
+        "+cd": {
+            "+query_descripters": [
+                {
+                    "realm": "CloudBank",
+                    "group_by": "none"
+                },
+                {
+                    "realm": "CloudBank",
+                    "group_by": "cb_cloud_provider"
+                },
+                {
+                    "realm": "CloudBank",
+                    "group_by": "cb_service"
+                },
+                {
+                    "realm": "CloudBank",
+                    "group_by": "cb_sub_service"
+                },
+                {
+                    "realm": "CloudBank",
+                    "group_by": "cb_fund"
+                },
+                {
+                    "realm": "CloudBank",
+                    "group_by": "cb_nairrproject"
+                },
+                {
+                    "realm": "CloudBank",
+                    "group_by": "cb_funder"
+                },
+                {
+                    "realm": "CloudBank",
+                    "group_by": "cb_pi"
+                },
+                {
+                    "realm": "CloudBank",
+                    "group_by": "cb_location"
+                },
+                {
+                    "realm": "CloudBank",
+                    "group_by": "cb_nsf_directorate"
+                },
+                {
+                    "realm": "CloudBank",
+                    "group_by": "cb_nsf_division"
+                },
+                {
+                    "realm": "CloudBank",
+                    "group_by": "cb_co_pi"
+                },
+                {
+                    "realm": "CloudBank",
+                    "group_by": "cb_manager"
+                }
+            ],
+            "summary_charts": [
+            ]
+        }
+    }
+}

@@ -1,0 +1,150 @@
+{
+    "table_definition": {
+        "name": "funds",
+        "engine": "InnoDB",
+        "charset": "utf8",
+        "collation": "utf8_unicode_ci",
+        "columns": [
+            {
+                "name": "fund_id",
+                "type": "int(11)",
+                "nullable": false,
+                "extra": "auto_increment",
+                "comment": "Internal XDMoD assigned id"
+            },
+            {
+                "name": "id",
+                "type": "varchar(255)",
+                "nullable": false,
+                "comment": "External ID"
+            },
+            {
+                "name": "project_id",
+                "type": "varchar(32)",
+                "nullable": false,
+                "comment": "NAIRR Project Identifier"
+            },
+            {
+                "name": "funder_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "nsf_directorate_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "nsf_division_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "title",
+                "type": "varchar(2048)",
+                "nullable": false
+            },
+            {
+                "name": "start_date",
+                "type": "datetime",
+                "nullable": false
+            },
+            {
+                "name": "start_day_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "end_date",
+                "type": "datetime",
+                "nullable": true
+            },
+            {
+                "name": "end_day_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "created",
+                "type": "datetime",
+                "nullable": false,
+                "default": "CURRENT_TIMESTAMP"
+            },
+            {
+                "name": "last_modified",
+                "type": "timestamp",
+                "default": "CURRENT_TIMESTAMP",
+                "nullable": false,
+                "extra": "ON UPDATE CURRENT_TIMESTAMP"
+            }
+        ],
+        "indexes": [
+            {
+                "name": "PRIMARY",
+                "columns": [
+                    "fund_id"
+                ]
+            },
+            {
+                "name": "idx_funds_funder_id",
+                "columns": [
+                    "funder_id"
+                ]
+            },
+            {
+                "name": "idx_funds_nsf_directorate_id",
+                "columns": [
+                    "nsf_directorate_id"
+                ]
+            },
+            {
+                "name": "idx_funds_nsf_division_id",
+                "columns": [
+                    "nsf_division_id"
+                ]
+            },
+            {
+                "name": "idx_id",
+                "columns": [
+                    "id"
+                ],
+                "is_unique": true
+            }
+        ],
+        "foreign_key_constraints": [
+            {
+                "name": "fk_fund_funder_id",
+                "columns": [
+                    "funder_id"
+                ],
+                "referenced_table": "funders",
+                "referenced_columns": [
+                    "funder_id"
+                ],
+                "on_delete": "CASCADE"
+            },
+            {
+                "name": "fk_fund_nsf_directorate_id",
+                "columns": [
+                    "nsf_directorate_id"
+                ],
+                "referenced_table": "nsf_directorates",
+                "referenced_columns": [
+                    "nsf_directorate_id"
+                ],
+                "on_delete": "CASCADE"
+            },
+            {
+                "name": "fk_fund_nsf_division_id",
+                "columns": [
+                    "nsf_division_id"
+                ],
+                "referenced_table": "nsf_divisions",
+                "referenced_columns": [
+                    "nsf_division_id"
+                ],
+                "on_delete": "CASCADE"
+            }
+        ]
+    }
+}
