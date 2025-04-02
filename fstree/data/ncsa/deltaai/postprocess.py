@@ -31,13 +31,13 @@ def fileiterator(datasource):
 
 def main():
 
-    srcdir = "/data/ncsa/deltaai/slurm_logs"
+    srcdir = "/filetransfer/pcparchives/ncsa/deltaai"
     outdir = "/data/ncsa/deltaai/postprocessed"
 
     logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s', datefmt='%Y-%m-%dT%H:%M:%S', level=logging.WARNING)
     logging.captureWarnings(True)
 
-    mapping_data = pd.read_excel('/home/jpwhite4/NAIRR usage reported as of 12-09-2024.xlsx', sheet_name='NCSA')
+    mapping_data = pd.read_excel('/data/mapping/NAIRR Jan-2025 Usage.xlsx', sheet_name='NCSA')
 
 
     mapping = {}
@@ -55,7 +55,6 @@ def main():
             for job in slurm_log['jobs']:
                 charge_id = job['account'][0:4]
                 if charge_id in mapping:
-                    print(charge_id, job['account'], mapping[charge_id])
                     job['account'] = mapping[charge_id]
                     out_jobs.append(job)
 
