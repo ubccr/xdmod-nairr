@@ -27,7 +27,7 @@ def main():
 
     delimiter = "|"
 
-    srcdir = "/data/tacc-frontera/accounting"
+    srcdir = "/filetransfer/tacc/frontera/accounting"
     outdir = "/data/tacc-frontera/post-processed"
 
     logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s', datefmt='%Y-%m-%dT%H:%M:%S', level=logging.INFO)

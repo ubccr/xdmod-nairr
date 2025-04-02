@@ -17,8 +17,8 @@ def fileiterator(datasource):
 
     for filename in filenames:
         try:
-            fdate = datetime.datetime.strptime(filename, '%Y-%m-%d.jobs')
-            if now - fdate > datetime.timedelta(days=365):
+            fdate = datetime.datetime.strptime(filename, '%Y%m%d')
+            if now - fdate > datetime.timedelta(days=600):
                 logging.debug('Skip %s due to time range', filename)
                 continue
         except ValueError:
@@ -32,23 +32,11 @@ def main():
 
     delimiter = "|"
 
-    srcdir = "/filetransfer/pcparchives/psc/accounting"
-    outdir = "/data/psc-bridges2/postprocessed"
+    srcdir = "/filetransfer/pcparchives/purdue/anvil/sacct"
+    outdir = "/data/purdue/anvil"
 
     logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s', datefmt='%Y-%m-%dT%H:%M:%S', level=logging.WARNING)
     logging.captureWarnings(True)
-
-    mapping_data = pd.read_excel('/data/mapping/NAIRR Jan-2025 Usage.xlsx', sheet_name='PSC ')
-
-    queue_resmap = {
-        "RM": "PSC-Bridges-2-Regular-Memory",
-        "EM": "PSC-Bridges-2-Extreme-Memory",
-        "GPU": "PSC-Bridges-2-GPU"
-    }
-
-    mapping = {}
-    for row in mapping_data.iterrows():
-        mapping[row[1]['subgrantnumber'].lower()] = row[1]['nairr_grant_number'].lower()
 
     for fullpath, filename in fileiterator(srcdir):
         tmpfiles = {}
@@ -57,25 +45,19 @@ def main():
             reader = csv.reader(filep, delimiter=delimiter)
 
             for line in reader:
-                if line[4] not in mapping:
+                if not line[5].startswith('ai'):
                     continue
 
-                if len(line) > 24:
-                    line[23] = "!".join(line[23:])
+                queue = line[3]
+                if queue.lower().startswith('gpu'):
+                    resource = 'Purdue-Anvil-GPU'
+                else:
+                    resource = 'Purdue-Anvil-CPU'
 
-                line.insert(4, 'N/A') # missing QOS field
-                line.insert(21, '') # missing tres
-                line[5] = mapping[line[5]]
+                if len(line) > 26:
+                    line[25] = "!".join(line[25:])
 
-                resource = None
-                for qnam, rname in queue_resmap.items():
-                    if line[3].startswith(qnam):
-                        resource = rname
-                        break
-
-                if resource is None:
-                    logging.error(f"Unrecognized queue {line[3]}")
-                    continue
+                line[5] = 'NAIRR' + line[5][2:8]
 
                 if resource not in tmpfiles:
                     tmpfiles[resource] = tempfile.NamedTemporaryFile(mode="w", encoding="utf=8", delete=False)    

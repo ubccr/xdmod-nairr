@@ -119,7 +119,7 @@ def main():
                     description='What the program does',
                     epilog='Text at the bottom of help')
 
-    parser.add_argument('-i', '--indir', default="/data/tacc-lonestar6/accounting")
+    parser.add_argument('-i', '--indir', default="/filetransfer/tacc/ls6/accounting")
     parser.add_argument('-o', '--outdir', default="/data/tacc-lonestar6/post-processed")
     parser.add_argument('-v', '--verbose', action='store_true')
     parser.add_argument('-q', '--quiet', action='store_true')
