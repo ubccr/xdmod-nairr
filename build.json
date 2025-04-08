@@ -25,11 +25,11 @@
     "doc": [
       "LICENSE"
     ],
-    "etc": {
-      "configuration/etl": "",
-      "configuration/roles.d": "",
-      "configuration/datawarehouse.d": "",
-      "configuration/rawstatistics.d": ""
-    }
+    "etc": [
+      "configuration/etl",
+      "configuration/roles.d",
+      "configuration/datawarehouse.d",
+      "configuration/rawstatistics.d"
+    ]
   }
 }
