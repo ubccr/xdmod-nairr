@@ -13,12 +13,12 @@
       "/specification"
     ],
     "exclude_patterns": [
-      "#/\\.#"
     ]
   },
   "file_maps": {
     "data": [
-      "classes"
+      "classes/DataWarehouse",
+      "classes/OpenXdmod/Shredder"
     ],
     "bin": [
     ],
