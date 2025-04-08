@@ -17,8 +17,7 @@
   },
   "file_maps": {
     "data": [
-      "classes/DataWarehouse",
-      "classes/OpenXdmod/Shredder"
+      "classes"
     ],
     "bin": [
     ],
