@@ -1,0 +1,48 @@
+{
+    "table_definition": {
+        "name": "action_allocation_dates",
+        "engine": "InnoDB",
+        "charset": "utf8",
+        "collation": "utf8_unicode_ci",
+        "comment": "Dimension Table for action_types",
+        "columns": [
+            {
+                "name": "action_allocation_date_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "action_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "begin_date",
+                "type": "datetime",
+                "nullable": true
+            },
+            {
+                "name": "end_date",
+                "type": "datetime",
+                "nullable": true
+            }
+        ],
+        "indexes": [
+            {
+                "name": "PRIMARY",
+                "columns": [
+                    "action_allocation_date_id"
+                ],
+                "is_unique": true
+            },
+            {
+                "name": "action_lookup",
+                "columns": [
+                    "action_id"
+                ],
+                "is_unique": false
+            }
+        ],
+        "triggers": []
+    }
+}

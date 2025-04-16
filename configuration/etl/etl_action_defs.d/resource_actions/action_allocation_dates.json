@@ -1,0 +1,49 @@
+{
+    "table_definition": [
+        {
+            "$ref": "${table_definition_dir}/resource_actions/action_allocation_dates.json#/table_definition"
+        }
+    ],
+    "source_query": {
+        "records": {
+            "action_allocation_date_id": "ad.action_allocation_date_id",
+            "action_id": "ad.action_id",
+            "begin_date": "(ad.begin_date AT TIME ZONE 'America/New_York')::timestamp",
+            "end_date": "(ad.end_date AT TIME ZONE 'America/New_York')::timestamp"
+        },
+        "joins": [
+            {
+                "name": "action_allocation_dates",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "ad"
+            },
+            {
+                "name": "actions",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "ac",
+                "on": "ac.action_id = ad.action_id"
+            },
+            {
+                "name": "requests",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "req",
+                "on": "ac.request_id = req.request_id"
+            },
+            {
+                "name": "opportunities",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "op",
+                "on": "op.opportunity_id = req.opportunity_id"
+            },
+            {
+                "name": "allocations_processes",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "ap",
+                "on": "op.allocations_process_id = ap.allocations_process_id"
+            }
+        ],
+        "where": [
+            "ap.allocations_process_name_abbr = 'NAIRR'"
+        ]
+    }
+}
