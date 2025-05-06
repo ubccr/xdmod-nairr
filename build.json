@@ -8,7 +8,7 @@
     "include_patterns": [
     ],
     "exclude_paths": [
-      "/fstree",,
+      "/fstree",
       "/specification"
     ],
     "exclude_patterns": [
