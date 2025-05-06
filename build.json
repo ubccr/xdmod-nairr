@@ -16,7 +16,8 @@
   },
   "file_maps": {
     "data": [
-      "classes"
+      "classes",
+      "html"
     ],
     "bin": [
     ],
