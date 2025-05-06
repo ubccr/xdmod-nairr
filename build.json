@@ -24,7 +24,7 @@
       "LICENSE"
     ],
     "lib": [
-      "scripts/"
+      "scripts"
     ],
     "etc": [
       "configuration/etl",
