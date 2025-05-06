@@ -8,8 +8,7 @@
     "include_patterns": [
     ],
     "exclude_paths": [
-      "/fstree",
-      "/scripts",
+      "/fstree",,
       "/specification"
     ],
     "exclude_patterns": [
@@ -23,6 +22,9 @@
     ],
     "doc": [
       "LICENSE"
+    ],
+    "lib": [
+      "scripts/"
     ],
     "etc": [
       "configuration/etl",
