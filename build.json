@@ -3,30 +3,16 @@
   "version": "11.5.0",
   "release": "1",
   "files": {
-    "include_paths": [
-    ],
-    "include_patterns": [
-    ],
-    "exclude_paths": [
-      "/fstree",
-      "/specification"
-    ],
-    "exclude_patterns": [
-    ]
+    "include_paths": [],
+    "include_patterns": [],
+    "exclude_paths": ["/fstree", "/specification"],
+    "exclude_patterns": []
   },
   "file_maps": {
-    "data": [
-      "classes",
-      "html"
-    ],
-    "bin": [
-    ],
-    "doc": [
-      "LICENSE"
-    ],
-    "lib": [
-      "scripts/"
-    ],
+    "data": ["classes", "html"],
+    "bin": [],
+    "doc": ["LICENSE"],
+    "lib": ["scripts/"],
     "etc": [
       "configuration/etl",
       "configuration/roles.d",
