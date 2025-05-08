@@ -5,11 +5,15 @@ SELECT
   RES.DESCRIPTION,
   RTYPE.RESOURCE_TYPE,
   RES.PRODUCTION_BEGIN_DATE,
-  RES.PRODUCTION_END_DATE
+  RES.PRODUCTION_END_DATE,
+  TRIM(
+    COALESCE(O.organization_abbr, O.organization_name)
+  ) AS "organization"
 FROM
   "xras"."resources" AS RES
   JOIN "xras"."allocations_process_resources" AS APRES ON RES.RESOURCE_ID = APRES.RESOURCE_ID
   JOIN "xras"."allocations_processes" AS AP ON AP.ALLOCATIONS_PROCESS_ID = APRES.ALLOCATIONS_PROCESS_ID
+  JOIN "xras"."organizations" as O ON o.organization_id = RES.organization_id
   LEFT JOIN "xras"."resource_types" AS RTYPE ON RTYPE.RESOURCE_TYPE_ID = RES.RESOURCE_TYPE_ID
 WHERE
   AP.ALLOCATIONS_PROCESS_NAME = 'National Artificial Intelligence Research Resource'
@@ -82,6 +86,7 @@ def main():
                             "resource_allocation_type": "CPUNode",
                             "timezone": "EST",
                             "pi_column": "account_name",
+                            "organization": data[6],
                         },
                         "specs": {
                             "resource": resource,
