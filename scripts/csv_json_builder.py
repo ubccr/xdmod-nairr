@@ -19,7 +19,7 @@ SELECT
   first_name,
   middle_name,
   last_name,
-  TRIM(o.organization_name) AS "organization_name"
+  TRIM(COALESCE(o.organization_abbr,o.organization_name)) AS "organization_name"
 FROM
   xras.people p
   JOIN xras.organizations o ON o.organization_id = p.organization_id
@@ -38,7 +38,7 @@ WITH
       first_name,
       middle_name,
       last_name,
-      TRIM(o.organization_name) AS "organization_name",
+      TRIM(COALESCE(o.organization_abbr,o.organization_name)) AS "organization_name",
       rpr.request_role_type_id,
       r.request_master_id,
       rm.request_number AS "nairr_project_name",

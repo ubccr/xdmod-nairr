@@ -45,7 +45,7 @@ def demangle_name(inname):
 
 def main():
 
-    XDMOD_CONFIG_PATH = "/etc/xdmod"
+    XDMOD_CONFIG_PATH = "/data/www/xdmod/etc"
 
     config = configparser.ConfigParser()
     config.read(f"{XDMOD_CONFIG_PATH}/portal_settings.ini")
