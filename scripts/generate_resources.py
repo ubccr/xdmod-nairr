@@ -13,7 +13,7 @@ FROM
   "xras"."resources" AS RES
   JOIN "xras"."allocations_process_resources" AS APRES ON RES.RESOURCE_ID = APRES.RESOURCE_ID
   JOIN "xras"."allocations_processes" AS AP ON AP.ALLOCATIONS_PROCESS_ID = APRES.ALLOCATIONS_PROCESS_ID
-  JOIN "xras"."organizations" as O ON o.organization_id = RES.organization_id
+  JOIN "xras"."organizations" as O ON O.organization_id = RES.organization_id
   LEFT JOIN "xras"."resource_types" AS RTYPE ON RTYPE.RESOURCE_TYPE_ID = RES.RESOURCE_TYPE_ID
 WHERE
   AP.ALLOCATIONS_PROCESS_NAME = 'National Artificial Intelligence Research Resource'
@@ -88,7 +88,7 @@ def main():
                             "pi_column": "account_name",
                             "organization": data[6],
                         },
-                        "specs": {
+                        "specs": {curl -O https://patch-diff.githubusercontent.com/raw/ubccr/xdmod/pull/1942.patchcurl -O https://patch-diff.githubusercontent.com/raw/ubccr/xdmod/pull/1942.patch
                             "resource": resource,
                             "start_date": data[4].strftime("%Y-%m-%d"),
                             "cpu_node_count": 1,
@@ -111,10 +111,10 @@ def main():
             rfact.append(info["fact"])
             rspec.append(info["specs"])
 
-        with open("resources.json", "w") as filep:
+        with open(f"{XDMOD_CONFIG_PATH}/resources.json", "w") as filep:
             json.dump(rfact, filep, indent=4)
 
-        with open("resource_specs.json", "w") as filep:
+        with open(f"{XDMOD_CONFIG_PATH}/resource_specs.json", "w") as filep:
             json.dump(rspec, filep, indent=4)
 
 
