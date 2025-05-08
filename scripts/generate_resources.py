@@ -88,7 +88,7 @@ def main():
                             "pi_column": "account_name",
                             "organization": data[6],
                         },
-                        "specs": {curl -O https://patch-diff.githubusercontent.com/raw/ubccr/xdmod/pull/1942.patchcurl -O https://patch-diff.githubusercontent.com/raw/ubccr/xdmod/pull/1942.patch
+                        "specs": {
                             "resource": resource,
                             "start_date": data[4].strftime("%Y-%m-%d"),
                             "cpu_node_count": 1,
