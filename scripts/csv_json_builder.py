@@ -13,13 +13,36 @@ ORDER BY
   "name" ASC
 """
 
+resource_orgs_sql = """
+SELECT
+  O.organization_id,
+  TRIM(O.organization_name) as "name",
+  TRIM(
+    COALESCE(O.organization_abbr, O.organization_name)
+  ) AS "abbr"
+FROM
+  "xras"."resources" AS RES
+  JOIN "xras"."allocations_process_resources" AS APRES ON RES.RESOURCE_ID = APRES.RESOURCE_ID
+  JOIN "xras"."allocations_processes" AS AP ON AP.ALLOCATIONS_PROCESS_ID = APRES.ALLOCATIONS_PROCESS_ID
+  JOIN "xras"."organizations" as O ON O.organization_id = RES.organization_id
+  LEFT JOIN "xras"."resource_types" AS RTYPE ON RTYPE.RESOURCE_TYPE_ID = RES.RESOURCE_TYPE_ID
+WHERE
+  AP.ALLOCATIONS_PROCESS_NAME = 'National Artificial Intelligence Research Resource'
+  AND RES.PRODUCTION_BEGIN_DATE IS NOT NULL
+ORDER BY
+  RES.PRODUCTION_BEGIN_DATE ASC,
+  RES.RESOURCE_NAME ASC;
+"""
+
 names_sql = """
 SELECT
   username AS orcid,
   first_name,
   middle_name,
   last_name,
-  TRIM(COALESCE(o.organization_abbr,o.organization_name)) AS "organization_name"
+  TRIM(
+    COALESCE(o.organization_abbr, o.organization_name)
+  ) AS "organization_name"
 FROM
   xras.people p
   JOIN xras.organizations o ON o.organization_id = p.organization_id
@@ -38,12 +61,15 @@ WITH
       first_name,
       middle_name,
       last_name,
-      TRIM(COALESCE(o.organization_abbr,o.organization_name)) AS "organization_name",
+      TRIM(
+        COALESCE(o.organization_abbr, o.organization_name)
+      ) AS "organization_name",
       rpr.request_role_type_id,
       r.request_master_id,
       rm.request_number AS "nairr_project_name",
       p.person_id,
       r.date_submitted,
+      TRIM(res.resource_name) AS "resource_name",
       ROW_NUMBER() OVER (
         PARTITION BY
           rm.request_number
@@ -58,6 +84,9 @@ WITH
       JOIN xras.request_masters rm ON r.request_master_id = rm.request_master_id
       JOIN xras.request_role_types rtt ON rpr.request_role_type_id = rtt.request_role_type_id
       JOIN xras.allocations_processes ap ON ap.allocations_process_id = o.allocations_process_id
+      JOIN xras.actions a ON a.request_id = r.request_id
+      JOIN xras.action_resources ar ON ar.action_id = a.action_id
+      JOIN xras.resources res ON res.resource_id = ar.resource_id
     WHERE
       ap.allocations_process_name_abbr = 'NAIRR'
       AND rtt.request_role_type = 'PI'
@@ -132,10 +161,13 @@ def fetch_and_append(cur, query, process_row_func, target_list):
 
 def org_builder(cur, query, org_list):
     cur.execute(query)
+    existing_ids = {org["organization_id"] for org in org_list}
     for data in cur:
-        org = {"organization_id": data[0], "name": data[1], "abbrev": data[2]}
-        if org not in org_list:
+        org_id = data[0]
+        if org_id not in existing_ids:
+            org = {"organization_id": data[0], "name": data[1], "abbrev": data[2]}
             org_list.append(org)
+            existing_ids.add(org_id)
 
 
 def main():
@@ -147,6 +179,7 @@ def main():
     names = []
     fos_list = []
     groups = []
+    cloud_to_pi = []
 
     db_config = {
         "database": config["tgcdbmirror"]["database"].strip("'"),
@@ -164,6 +197,7 @@ def main():
         with conn.cursor() as cur:
             # Organization.json
             org_builder(cur, org_sql, orgs)
+            org_builder(cur, resource_orgs_sql, orgs)
 
             # users for names.csv
             fetch_and_append(
@@ -176,12 +210,20 @@ def main():
                 lambda row: [row[7], row[1], row[3], row[4]],
                 names,
             )
+
             # group to field of science for group-to-hiearchy.csv
             fetch_and_append(cur, groups_sql, lambda row: [row[0], row[3]], groups)
 
             # fos hieararchy for hierarchy.csv
             fetch_and_append(
                 cur, hierarchy_sql, lambda row: [row[0], row[0], row[2] or ""], fos_list
+            )
+
+            fetch_and_append(
+                cur,
+                nairr_project_sql,
+                lambda row: [row[0], row[7], row[10]],
+                cloud_to_pi,
             )
 
         save_json("organization.json", orgs)
@@ -191,6 +233,8 @@ def main():
         save_csv("group-to-hierarchy.csv", groups, csv.QUOTE_ALL)
 
         save_csv("hierarchy.csv", fos_list, csv.QUOTE_ALL)
+
+        save_csv("cloud-project-to-pi.csv", cloud_to_pi)
 
 
 if __name__ == "__main__":
