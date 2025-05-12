@@ -82,7 +82,7 @@ def main():
                             "resource": resource,
                             "resource_type": rtype_map[data[3]],
                             "name": data[1],
-                            "description": data[2],
+                            "description": data[2] or "",
                             "resource_allocation_type": "CPUNode",
                             "timezone": "EST",
                             "pi_column": "account_name",

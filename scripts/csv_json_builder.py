@@ -1,38 +1,37 @@
 org_sql = """
 SELECT
-  organization_id as "id",
-  TRIM(organization_name) as "name",
-  TRIM(COALESCE(organization_abbr, organization_name)) AS "abbr"
+  o.organization_id AS "id",
+  TRIM(o.organization_name) AS "name",
+  TRIM(
+    COALESCE(o.organization_abbr, o.organization_name)
+  ) AS "abbr"
 FROM
   xras.organizations o
   JOIN xras.allocations_processes ap ON ap.allocations_process_id = o.allocations_process_id
-where
+WHERE
   ap.allocations_process_name_abbr = 'NAIRR'
-  and o.is_reconciled is true
-ORDER BY
-  "name" ASC
-"""
-
-resource_orgs_sql = """
+  AND o.is_reconciled IS TRUE
+UNION
+-- Second query: Organizations with resources in NAIRR
 SELECT
-  O.organization_id,
-  TRIM(O.organization_name) as "name",
+  o.organization_id AS "id",
+  TRIM(o.organization_name) AS "name",
   TRIM(
-    COALESCE(O.organization_abbr, O.organization_name)
+    COALESCE(o.organization_abbr, o.organization_name)
   ) AS "abbr"
 FROM
-  "xras"."resources" AS RES
-  JOIN "xras"."allocations_process_resources" AS APRES ON RES.RESOURCE_ID = APRES.RESOURCE_ID
-  JOIN "xras"."allocations_processes" AS AP ON AP.ALLOCATIONS_PROCESS_ID = APRES.ALLOCATIONS_PROCESS_ID
-  JOIN "xras"."organizations" as O ON O.organization_id = RES.organization_id
-  LEFT JOIN "xras"."resource_types" AS RTYPE ON RTYPE.RESOURCE_TYPE_ID = RES.RESOURCE_TYPE_ID
+  xras.resources AS res
+  JOIN xras.allocations_process_resources AS apres ON res.resource_id = apres.resource_id
+  JOIN xras.allocations_processes AS ap ON ap.allocations_process_id = apres.allocations_process_id
+  JOIN xras.organizations AS o ON o.organization_id = res.organization_id
 WHERE
-  AP.ALLOCATIONS_PROCESS_NAME = 'National Artificial Intelligence Research Resource'
-  AND RES.PRODUCTION_BEGIN_DATE IS NOT NULL
+  ap.allocations_process_name = 'National Artificial Intelligence Research Resource'
+  AND res.production_begin_date IS NOT NULL
+  -- Optional: Order the combined results
 ORDER BY
-  RES.PRODUCTION_BEGIN_DATE ASC,
-  RES.RESOURCE_NAME ASC;
+  "name" ASC;
 """
+
 
 names_sql = """
 SELECT
@@ -161,13 +160,19 @@ def fetch_and_append(cur, query, process_row_func, target_list):
 
 def org_builder(cur, query, org_list):
     cur.execute(query)
-    existing_ids = {org["organization_id"] for org in org_list}
+    names = set()
+    abbrev = set()
     for data in cur:
-        org_id = data[0]
-        if org_id not in existing_ids:
-            org = {"organization_id": data[0], "name": data[1], "abbrev": data[2]}
-            org_list.append(org)
-            existing_ids.add(org_id)
+        name = data[1]
+        lower = name.lower()
+        if lower in names:
+            name = name + " (D)"
+        if data[2] in abbrev:
+            continue
+        org = {"organization_id": data[0], "name": name, "abbrev": data[2]}
+        org_list.append(org)
+        names.add(lower)
+        abbrev.add(data[2])
 
 
 def main():
@@ -197,7 +202,6 @@ def main():
         with conn.cursor() as cur:
             # Organization.json
             org_builder(cur, org_sql, orgs)
-            org_builder(cur, resource_orgs_sql, orgs)
 
             # users for names.csv
             fetch_and_append(
