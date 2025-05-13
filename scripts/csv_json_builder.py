@@ -26,7 +26,7 @@ FROM
   JOIN xras.organizations AS o ON o.organization_id = res.organization_id
 WHERE
   ap.allocations_process_name = 'National Artificial Intelligence Research Resource'
-  AND res.production_begin_date IS NOT NULL
+  AND RES.PRODUCTION_BEGIN_DATE IS NOT NULL
   -- Optional: Order the combined results
 ORDER BY
   "name" ASC;
@@ -136,6 +136,7 @@ import configparser
 import csv
 import json
 import psycopg2
+import re
 
 XDMOD_CONFIG_PATH = "/data/www/xdmod/etc"
 
@@ -155,6 +156,25 @@ def fetch_and_append(cur, query, process_row_func, target_list):
     cur.execute(query)
     for row in cur:
         processed_row = process_row_func(row)
+        target_list.append(processed_row)
+
+
+def demangle_name(inname):
+
+    name = inname
+    r = re.compile(r"^([^(]+)")
+    mtch = r.match(name)
+    if mtch:
+        name = mtch.group(0)
+
+    return re.sub(r"[^\w]", "-", name)
+
+
+def fetch_and_append_cloud(cur, query, process_row_func, target_list):
+    cur.execute(query)
+    for row in cur:
+        processed_row = process_row_func(row)
+        processed_row[2] = demangle_name(processed_row[2])
         target_list.append(processed_row)
 
 
@@ -223,7 +243,7 @@ def main():
                 cur, hierarchy_sql, lambda row: [row[0], row[0], row[2] or ""], fos_list
             )
 
-            fetch_and_append(
+            fetch_and_append_cloud(
                 cur,
                 nairr_project_sql,
                 lambda row: [row[0], row[7], row[10]],
