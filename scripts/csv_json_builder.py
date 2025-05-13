@@ -1,6 +1,5 @@
 org_sql = """
 SELECT
-  o.organization_id AS "id",
   TRIM(o.organization_name) AS "name",
   TRIM(
     COALESCE(o.organization_abbr, o.organization_name)
@@ -13,8 +12,7 @@ WHERE
   AND o.is_reconciled IS TRUE
 UNION
 -- Second query: Organizations with resources in NAIRR
-SELECT
-  o.organization_id AS "id",
+SELECT DISTINCT
   TRIM(o.organization_name) AS "name",
   TRIM(
     COALESCE(o.organization_abbr, o.organization_name)
