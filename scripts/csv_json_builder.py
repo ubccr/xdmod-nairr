@@ -66,7 +66,6 @@ WITH
       rm.request_number AS "nairr_project_name",
       p.person_id,
       r.date_submitted,
-      TRIM(res.resource_name) AS "resource_name",
       ROW_NUMBER() OVER (
         PARTITION BY
           rm.request_number
@@ -81,9 +80,6 @@ WITH
       JOIN xras.request_masters rm ON r.request_master_id = rm.request_master_id
       JOIN xras.request_role_types rtt ON rpr.request_role_type_id = rtt.request_role_type_id
       JOIN xras.allocations_processes ap ON ap.allocations_process_id = o.allocations_process_id
-      JOIN xras.actions a ON a.request_id = r.request_id
-      JOIN xras.action_resources ar ON ar.action_id = a.action_id
-      JOIN xras.resources res ON res.resource_id = ar.resource_id
     WHERE
       ap.allocations_process_name_abbr = 'NAIRR'
       AND rtt.request_role_type = 'PI'
@@ -129,6 +125,48 @@ WHERE
   AND rm.request_number IS NOT NULL
 ORDER BY
   rm.request_number ASC;
+"""
+
+cloud_sql = """
+with
+  RankedRequests AS (
+    select distinct
+      res.resource_name,
+      ar.action_id,
+      a.action_id,
+      rm.request_number,
+      p.username as "orcid",
+      p.person_id,
+      ROW_NUMBER() OVER (
+        PARTITION BY
+          rm.request_number
+        ORDER BY
+          rpr.begin_date DESC
+      ) AS row_rank
+    from
+      xras.resources res
+      join xras.action_resources ar on res.resource_id = ar.resource_id
+      join xras.actions a on ar.action_id = a.action_id
+      join xras.requests r on a.request_id = r.request_id
+      join xras.request_masters rm on r.request_master_id = rm.request_master_id
+      join xras.request_people_roles rpr on r.request_id = rpr.request_id
+      join xras.people p on rpr.person_id = p.person_id
+      JOIN xras.request_role_types rtt ON rpr.request_role_type_id = rtt.request_role_type_id
+    where
+      rm.allocations_process_id = 108
+      and res.resource_name like 'Indiana Jetstream2 GPU'
+      and res.production_begin_date is not null
+      and rm.request_number is not null
+      and rtt.request_role_type = 'PI'
+  )
+SELECT
+  *
+FROM
+  RankedRequests
+WHERE
+  row_rank = 1
+ORDER BY
+  person_id ASC;
 """
 import configparser
 import csv
@@ -181,16 +219,16 @@ def org_builder(cur, query, org_list):
     names = set()
     abbrev = set()
     for data in cur:
-        name = data[1]
+        name = data[0]
         lower = name.lower()
         if lower in names:
             name = name + " (D)"
-        if data[2] in abbrev:
+        if data[1] in abbrev:
             continue
-        org = {"organization_id": data[0], "name": name, "abbrev": data[2]}
+        org = {"name": name, "abbrev": data[1]}
         org_list.append(org)
         names.add(lower)
-        abbrev.add(data[2])
+        abbrev.add(data[1])
 
 
 def main():
@@ -243,8 +281,8 @@ def main():
 
             fetch_and_append_cloud(
                 cur,
-                nairr_project_sql,
-                lambda row: [row[0], row[7], row[10]],
+                cloud_sql,
+                lambda row: [row[3], row[3], row[0]],
                 cloud_to_pi,
             )
 
