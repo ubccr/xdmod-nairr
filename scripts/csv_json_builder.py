@@ -128,45 +128,20 @@ ORDER BY
 """
 
 cloud_sql = """
-with
-  RankedRequests AS (
-    select distinct
-      res.resource_name,
-      ar.action_id,
-      a.action_id,
-      rm.request_number,
-      p.username as "orcid",
-      p.person_id,
-      ROW_NUMBER() OVER (
-        PARTITION BY
-          rm.request_number
-        ORDER BY
-          rpr.begin_date DESC
-      ) AS row_rank
-    from
-      xras.resources res
-      join xras.action_resources ar on res.resource_id = ar.resource_id
-      join xras.actions a on ar.action_id = a.action_id
-      join xras.requests r on a.request_id = r.request_id
-      join xras.request_masters rm on r.request_master_id = rm.request_master_id
-      join xras.request_people_roles rpr on r.request_id = rpr.request_id
-      join xras.people p on rpr.person_id = p.person_id
-      JOIN xras.request_role_types rtt ON rpr.request_role_type_id = rtt.request_role_type_id
-    where
-      rm.allocations_process_id = 108
-      and res.resource_name like 'Indiana Jetstream2 GPU'
-      and res.production_begin_date is not null
-      and rm.request_number is not null
-      and rtt.request_role_type = 'PI'
-  )
-SELECT
-  *
-FROM
-  RankedRequests
-WHERE
-  row_rank = 1
-ORDER BY
-  person_id ASC;
+select distinct
+  res.resource_name as resource_name,
+  rm.request_number
+from
+  xras.resources res
+  join xras.action_resources ar on res.resource_id = ar.resource_id
+  join xras.actions a on ar.action_id = a.action_id
+  join xras.requests r on a.request_id = r.request_id
+  join xras.request_masters rm on r.request_master_id = rm.request_master_id
+where
+  rm.allocations_process_id = 108
+  and res.production_begin_date is not null
+  and rm.request_number is not null
+  and resource_name in ('Indiana Jetstream2 GPU',)
 """
 import configparser
 import csv
@@ -282,7 +257,7 @@ def main():
             fetch_and_append_cloud(
                 cur,
                 cloud_sql,
-                lambda row: [row[3], row[3], row[0]],
+                lambda row: [row[1], row[1], row[0]],
                 cloud_to_pi,
             )
 
