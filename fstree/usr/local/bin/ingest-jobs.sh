@@ -19,6 +19,7 @@ sudo -u xdmod /data/psc/postprocess.py
 sudo -u xdmod /data/tamu/postprocess.py
 sudo -u xdmod /data/dgx/postprocess.py
 sudo -u xdmod /data/purdue/postprocess.py
+sudo -u xdmod /data/tacc-vista/scripts/postprocess.py
 
 # Still waiting for SDSC data /data/sdsc/postprocess.py
 
@@ -40,6 +41,7 @@ sudo -u xdmod xdmod-shredder -r Purdue-Anvil-CPU -f slurm -d /data/purdue/anvil/
 sudo -u xdmod xdmod-shredder -r TAMU-ACES -f slurmjson -d /data/tamu/aces/postprocessed/ -q
 sudo -u xdmod xdmod-shredder -r PSC-Neocortex- -f slurmjson -d /data/psc/postprocessed/ -q
 sudo -u xdmod xdmod-shredder -r NVIDIA-DGX-Cloud -f slurmjson -d /data/dgx/postprocessed/ -q
+sudo -u xdmod xdmod-shredder -r TACC-Vista -f slurm -d /data/tacc-vista/post-processed
 
 sudo -u xdmod /usr/share/xdmod/tools/etl/etl_overseer.php -p nairr.resource-actions -m 2000-01-01
 sudo -u xdmod /usr/bin/xdmod-build-filter-lists --realm ResourceActions --quiet
