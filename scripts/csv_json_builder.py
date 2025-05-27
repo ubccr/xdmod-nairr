@@ -10,22 +10,6 @@ FROM
 WHERE
   ap.allocations_process_name_abbr = 'NAIRR'
   AND o.is_reconciled IS TRUE
-UNION
--- Second query: Organizations with resources in NAIRR
-SELECT DISTINCT
-  TRIM(o.organization_name) AS "name",
-  TRIM(
-    COALESCE(o.organization_abbr, o.organization_name)
-  ) AS "abbr"
-FROM
-  xras.resources AS res
-  JOIN xras.allocations_process_resources AS apres ON res.resource_id = apres.resource_id
-  JOIN xras.allocations_processes AS ap ON ap.allocations_process_id = apres.allocations_process_id
-  JOIN xras.organizations AS o ON o.organization_id = res.organization_id
-WHERE
-  ap.allocations_process_name = 'National Artificial Intelligence Research Resource'
-  AND RES.PRODUCTION_BEGIN_DATE IS NOT NULL
-  -- Optional: Order the combined results
 ORDER BY
   "name" ASC;
 """
@@ -191,19 +175,13 @@ def fetch_and_append_cloud(cur, query, process_row_func, target_list):
 
 def org_builder(cur, query, org_list):
     cur.execute(query)
-    names = set()
-    abbrev = set()
     for data in cur:
-        name = data[0]
-        lower = name.lower()
-        if lower in names:
-            name = name + " (D)"
-        if data[1] in abbrev:
-            continue
-        org = {"name": name, "abbrev": data[1]}
-        org_list.append(org)
-        names.add(lower)
-        abbrev.add(data[1])
+        org = {
+            "name": data[0],
+            "abbrev": data[1],
+        }
+        if org not in org_list:
+            org_list.append(org)
 
 
 def main():
