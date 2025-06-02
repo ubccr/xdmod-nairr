@@ -1,6 +1,0 @@
-[
-  {
-    "operation": "execute_sql",
-    "sql": "UPDATE resource_allocated SET percent = 2 WHERE resource_id IN (3725, 3726)"
-  }
-]
