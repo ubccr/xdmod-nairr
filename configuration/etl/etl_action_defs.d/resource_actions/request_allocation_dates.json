@@ -1,0 +1,59 @@
+{
+    "table_definition": [
+        {
+            "$ref": "${table_definition_dir}/resource_actions/request_allocation_dates.json#/table_definition"
+        }
+    ],
+    "source_query": {
+        "records": {
+            "request_id": "req.request_id",
+            "action_count": "COUNT(ad.action_id)",
+            "begin_date": "MIN(ad.begin_date AT TIME ZONE 'America/New_York')::timestamp",
+            "end_date": "MAX(ad.end_date AT TIME ZONE 'America/New_York')::timestamp"
+        },
+        "joins": [
+            {
+                "name": "action_allocation_dates",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "ad"
+            },
+            {
+                "name": "allocation_date_types",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "adt",
+                "on": "adt.allocation_date_type_id = ad.allocation_date_type_id"
+            },
+            {
+                "name": "actions",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "ac",
+                "on": "ac.action_id = ad.action_id"
+            },
+            {
+                "name": "requests",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "req",
+                "on": "ac.request_id = req.request_id"
+            },
+            {
+                "name": "opportunities",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "op",
+                "on": "op.opportunity_id = req.opportunity_id"
+            },
+            {
+                "name": "allocations_processes",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "ap",
+                "on": "op.allocations_process_id = ap.allocations_process_id"
+            }
+        ],
+        "where": [
+            "ap.allocations_process_name_abbr = 'NAIRR'",
+            "adt.allocation_date_type = 'Approved'"
+        ],
+        "groupby": [
+            "req.request_id" 
+        ]
+    }
+}
