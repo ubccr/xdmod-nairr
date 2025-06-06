@@ -55,7 +55,6 @@ def main():
             for job in slurm_log['jobs']:
                 charge_id = job['account']
                 if charge_id in mapping:
-                    print(charge_id, job['account'], mapping[charge_id])
                     job['account'] = mapping[charge_id]
                     if job['user'] is None:
                         job['user'] = job['group']
