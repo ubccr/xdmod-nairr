@@ -29,12 +29,12 @@
             },
             {
                 "schema": "modw_resourceactions",
-                "name": "action_allocation_dates",
+                "name": "request_allocation_dates",
                 "alias": "ad",
                 "join": {
-                    "primaryKey": "action_id",
+                    "primaryKey": "request_id",
                     "foreignTableAlias": "jt",
-                    "foreignKey": "action_id"
+                    "foreignKey": "request_id"
                 }
             },
             {

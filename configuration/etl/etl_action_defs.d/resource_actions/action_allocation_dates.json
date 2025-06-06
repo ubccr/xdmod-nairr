@@ -18,6 +18,12 @@
                 "alias": "ad"
             },
             {
+                "name": "allocation_date_types",
+                "schema": "${SOURCE_SCHEMA}",
+                "alias": "adt",
+                "on": "adt.allocation_date_type_id = ad.allocation_date_type_id"
+            },
+            {
                 "name": "actions",
                 "schema": "${SOURCE_SCHEMA}",
                 "alias": "ac",
@@ -43,7 +49,8 @@
             }
         ],
         "where": [
-            "ap.allocations_process_name_abbr = 'NAIRR'"
+            "ap.allocations_process_name_abbr = 'NAIRR'",
+            "adt.allocation_date_type = 'Approved'"
         ]
     }
 }
