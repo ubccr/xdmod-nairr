@@ -31,35 +31,24 @@ def fileiterator(datasource):
 
 def main():
 
-    srcdir = "/data/psc/neocortex"
-    outdir = "/data/psc/postprocessed"
+    srcdir = "/data/dgx/logs"
+    outdir = "/data/dgx/postprocessed"
 
     logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s', datefmt='%Y-%m-%dT%H:%M:%S', level=logging.WARNING)
     logging.captureWarnings(True)
-
-    mapping_data = pd.read_excel('/data/mapping/NAIRR Jan-2025 Usage.xlsx', sheet_name='PSC')
-
-
-    mapping = {}
-    for row in mapping_data.iterrows():
-        mapping[str(row[1]['subgrantnumber']).lower()] = row[1]['nairr_grant_number'].lower()
 
     for fullpath, filename in fileiterator(srcdir):
 
         with open(fullpath, "r", encoding='utf-8', errors='ignore') as filep:
             
             slurm_log = json.load(filep)
+            fparts = filename.split(".")
 
             out_jobs = []
 
             for job in slurm_log['jobs']:
-                charge_id = job['account']
-                if charge_id in mapping:
-                    print(charge_id, job['account'], mapping[charge_id])
-                    job['account'] = mapping[charge_id]
-                    if job['user'] is None:
-                        job['user'] = job['group']
-                    out_jobs.append(job)
+                job['account'] = fparts[2]
+                out_jobs.append(job)
 
             if out_jobs:
                 slurm_log['jobs'] = out_jobs

@@ -48,7 +48,11 @@ def main():
 
         with open(fullpath, "r", encoding='utf-8', errors='ignore') as filep:
             
-            slurm_log = json.load(filep)
+            try:
+                slurm_log = json.load(filep)
+            except json.decoder.JSONDecodeError as e:
+                logging.error(f"JSON decode error in file {fullpath}")
+                continue
 
             out_jobs = []
 
