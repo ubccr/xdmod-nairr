@@ -1,15 +1,15 @@
 {
     "table_definition": [
         {
-            "$ref": "${table_definition_dir}/resource_actions/action_allocation_dates.json#/table_definition"
+            "$ref": "${table_definition_dir}/resource_actions/request_allocation_dates.json#/table_definition"
         }
     ],
     "source_query": {
         "records": {
-            "action_allocation_date_id": "ad.action_allocation_date_id",
-            "action_id": "ad.action_id",
-            "begin_date": "(ad.begin_date AT TIME ZONE 'America/New_York')::timestamp",
-            "end_date": "(ad.end_date AT TIME ZONE 'America/New_York')::timestamp"
+            "request_id": "req.request_id",
+            "action_count": "COUNT(ad.action_id)",
+            "begin_date": "MIN(ad.begin_date AT TIME ZONE 'America/New_York')::timestamp",
+            "end_date": "MAX(ad.end_date AT TIME ZONE 'America/New_York')::timestamp"
         },
         "joins": [
             {
@@ -51,6 +51,9 @@
         "where": [
             "ap.allocations_process_name_abbr = 'NAIRR'",
             "adt.allocation_date_type = 'Approved'"
+        ],
+        "groupby": [
+            "req.request_id" 
         ]
     }
 }

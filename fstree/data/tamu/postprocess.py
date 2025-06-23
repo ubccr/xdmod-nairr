@@ -37,7 +37,7 @@ def main():
     logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s', datefmt='%Y-%m-%dT%H:%M:%S', level=logging.WARNING)
     logging.captureWarnings(True)
 
-    mapping_data = pd.read_excel('/home/jpwhite4/NAIRR usage reported as of 12-09-2024.xlsx', sheet_name='TAMU')
+    mapping_data = pd.read_excel('/data/mapping/NAIRR usage reported as of 12-09-2024.xlsx', sheet_name='TAMU')
 
 
     mapping = {}
@@ -55,7 +55,6 @@ def main():
             for job in slurm_log['jobs']:
                 charge_id = job['account']
                 if charge_id in mapping:
-                    print(charge_id, job['account'], mapping[charge_id])
                     job['account'] = mapping[charge_id]
                     if job['user'] is None:
                         job['user'] = job['group']

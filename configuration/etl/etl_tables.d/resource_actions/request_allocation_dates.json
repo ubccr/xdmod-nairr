@@ -1,0 +1,41 @@
+{
+    "table_definition": {
+        "name": "request_allocation_dates",
+        "engine": "InnoDB",
+        "charset": "utf8",
+        "collation": "utf8_unicode_ci",
+        "comment": "Dimension Table for allocation dates",
+        "columns": [
+            {
+                "name": "request_id",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "action_count",
+                "type": "int(11)",
+                "nullable": false
+            },
+            {
+                "name": "begin_date",
+                "type": "datetime",
+                "nullable": true
+            },
+            {
+                "name": "end_date",
+                "type": "datetime",
+                "nullable": true
+            }
+        ],
+        "indexes": [
+            {
+                "name": "PRIMARY",
+                "columns": [
+                    "request_id"
+                ],
+                "is_unique": true
+            }
+        ],
+        "triggers": []
+    }
+}

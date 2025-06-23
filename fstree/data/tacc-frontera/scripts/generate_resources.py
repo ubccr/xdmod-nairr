@@ -12,7 +12,6 @@ JOIN "xras"."allocations_processes" AS AP ON AP.ALLOCATIONS_PROCESS_ID = APRES.A
 LEFT JOIN "xras"."resource_types" AS RTYPE ON RTYPE.RESOURCE_TYPE_ID = RES.RESOURCE_TYPE_ID
 WHERE AP.ALLOCATIONS_PROCESS_NAME = 'National Artificial Intelligence Research Resource'
 	AND RTYPE.RESOURCE_TYPE != 'Program'
-	AND RES.PRODUCTION_BEGIN_DATE IS NOT NULL
 ORDER BY RES.PRODUCTION_BEGIN_DATE ASC,
 	RES.RESOURCE_NAME ASC
 """
@@ -82,7 +81,7 @@ def main():
                         },
                         'specs': {
                             'resource': resource,
-                            'start_date': data[4].strftime('%Y-%m-%d'),
+                            'start_date': '1970-01-01',
                             'cpu_node_count': 1,
                             'cpu_processor_count': 1,
                             'cpu_ppn': 1,
@@ -91,6 +90,8 @@ def main():
                             'gpu_ppn': 0
                         }
                     }
+                    if data[4]:
+                        resources[resource]['specs']['start_date'] = data[4].strftime('%Y-%m-%d'),
                     if data[5]:
                         resources[resource]['specs']['end_date'] = data[5].strftime('%Y-%m-%d')
 

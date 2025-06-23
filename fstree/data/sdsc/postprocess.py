@@ -67,7 +67,6 @@ def main():
                 resource = 'todo'
 
                 if charge_id in mapping:
-                    print(job)
                     job['account'] = mapping[charge_id]
 
                     if resource not in outdata:

@@ -87,6 +87,11 @@
             "definition_file": "resource_actions/action_allocation_dates.json"
         },
         {
+            "name": "RequestAllocationDatesIngestor",
+            "description": "Ingestor for the request allocation dates table from XRAS",
+            "definition_file": "resource_actions/request_allocation_dates.json"
+        },
+        {
             "name": "ActionStatusTypesDimensionIngestor",
             "description": "Ingestor for the action status types dimension from XRAS",
             "definition_file": "resource_actions/action_status_types.json"
