@@ -117,6 +117,10 @@
                         ],
                         "total": 1
                     },
+                    "global_filters": {
+                        "data": [],
+                        "total": 0
+                    },
                     "aggregation_unit": "Auto",
                     "timeframe_label": "Previous month",
                     "start": 0,
@@ -166,6 +170,10 @@
                             }
                         ],
                         "total": 1
+                    },
+                    "global_filters": {
+                        "data": [],
+                        "total": 0
                     },
                     "aggregation_unit": "Auto",
                     "timeframe_label": "Previous month",

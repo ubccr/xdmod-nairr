@@ -5,19 +5,20 @@
   "files": {
     "include_paths": [],
     "include_patterns": [],
-    "exclude_paths": ["/fstree", "/specification"],
-    "exclude_patterns": []
+    "exclude_paths": ["/specification"],
+    "exclude_patterns": ["#/tests#"]
   },
   "file_maps": {
-    "data": ["classes", "html"],
-    "bin": [],
+    "data": ["classes", "html", "templates"],
+    "bin": ["fstree/usr/local/bin/"],
     "doc": ["LICENSE"],
     "lib": ["scripts/"],
-    "etc": [
-      "configuration/etl",
-      "configuration/roles.d",
-      "configuration/datawarehouse.d",
-      "configuration/rawstatistics.d"
-    ]
+    "etc": {
+      "configuration/portal_settings.d/tgcdbmirror.ini": "portal_settings.d/tgcdbmirror.ini",
+      "configuration/etl": "",
+      "configuration/roles.d": "",
+      "configuration/datawarehouse.d": "",
+      "configuration/rawstatistics.d": ""
+    }
   }
 }

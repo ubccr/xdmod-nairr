@@ -1,7 +1,7 @@
 {
   "module": "cloudbank",
   "+roles": {
-    "+po": {
+    "cd": {
       "+query_descripters": [
         {
           "realm": "CloudBankSpend",
