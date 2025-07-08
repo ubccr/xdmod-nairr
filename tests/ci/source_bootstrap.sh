@@ -30,6 +30,13 @@ function move_info_etc_xdmod {
     cp $REF_SOURCE/hierarchy.json /opt/xdmod/etc/
 }
 
+function copy_reports {
+    mkdir /opt/xdmod/reports
+    cp -r /root/nairr_reports/reports/* /opt/xdmod/reports/
+    chmod 770 /opt/xdmod/reports
+    chown -R apache:xdmod /opt/xdmod/reports
+}
+
 
 if [ -z $XDMOD_REALMS ]; then
     export XDMOD_REALMS=jobs,storage,cloud,resourcespecifications
@@ -114,16 +121,19 @@ then
     move_info_etc_xdmod
     copy_template_httpd_conf
 
+    if [ -d "/root/nairr_reports" ]; then
+      copy_reports
+    fi
+
     # Download patch directly to /tmp (no cd)
     curl -o /tmp/1942.patch https://patch-diff.githubusercontent.com/raw/ubccr/xdmod/pull/1942.patch
 
 # Apply the patch in /usr/share/xdmod without changing directory
     patch -d /opt/xdmod/share -p1 < /tmp/1942.patch
-
+   
 
     # Persistently add to PATH for all future shells
-
-
+    
 
     ~/bin/services start
     mysql -e "CREATE USER 'root'@'gateway' IDENTIFIED BY '';
@@ -159,6 +169,7 @@ then
     touch /opt/xdmod/logs/query.log
     chmod 660 /opt/xdmod/logs/query.log
     chown apache:xdmod /opt/xdmod/logs/query.log
+
 
     sudo /opt/xdmod/share/tools/etl/etl_overseer.php -a xdmod.hpcdb-ingest-common.unknown_organization 
     xdmod-import-csv -t hierarchy -i $REF_DIR/hierarchy.csv

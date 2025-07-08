@@ -1,0 +1,50 @@
+{
+  "roles": {
+    "cd": {
+      "display": "Center Director",
+      "type": "data",
+      "hierarchies": [
+        {
+          "level": 400,
+          "filter_override": false
+        }
+      ],
+      "dimensions": ["provider"],
+      "extends": "default",
+      "permitted_modules": [
+        {
+          "name": "nairr_reports",
+          "title": "Nairr Reports",
+          "position": 2000,
+          "javascriptClass": "XDMoD.Module.NairrReports",
+          "javascriptReference": "CCR.xdmod.ui.nairrReports",
+          "userManualSectionName": "Nairr Reports",
+          "tooltip": ""
+        }
+      ]
+    },
+    "cs": {
+      "display": "Center Staff",
+      "type": "data",
+      "hierarchies": [
+        {
+          "level": 300,
+          "filter_override": false
+        }
+      ],
+      "dimensions": ["provider"],
+      "extends": "default",
+      "permitted_modules": [
+        {
+          "name": "nairr_reports",
+          "title": "Nairr Reports",
+          "position": 2000,
+          "javascriptClass": "XDMoD.Module.NairrReports",
+          "javascriptReference": "CCR.xdmod.ui.nairrReports",
+          "userManualSectionName": "Nairr Reports",
+          "tooltip": ""
+        }
+      ]
+    }
+  }
+}

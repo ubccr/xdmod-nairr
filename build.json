@@ -14,11 +14,7 @@
     "doc": ["LICENSE"],
     "lib": ["scripts/"],
     "etc": {
-      "configuration/portal_settings.d/tgcdbmirror.ini": "portal_settings.d/tgcdbmirror.ini",
-      "configuration/etl": "",
-      "configuration/roles.d": "",
-      "configuration/datawarehouse.d": "",
-      "configuration/rawstatistics.d": ""
+      "configuration/": ""
     }
   }
 }
