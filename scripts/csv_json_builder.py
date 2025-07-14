@@ -1,5 +1,5 @@
 """
-generate_xdmod_config.py
+csv_json_builder.py
 
 This script connects to a Postgres database and extracts configuration and mapping data required for XDMoD (XD Metrics on Demand) NAIRR (National AI Research Resource) integration and reporting.
 
