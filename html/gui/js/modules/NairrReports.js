@@ -1,32 +1,25 @@
-/*
- * Template / Skeleton for XDMoD Portal Modules
+/**
+ * NAIRR Reports Module for XDMoD Portal
+ * @author Alex Tovar
+ * @date 2025-07-14
+
  *
- * To Use:
+ * This module displays NAIRR reports fetched from the `/custom_reports/reports` endpoint.
+ * - It creates a main panel area containing thumbnails and metadata for each report.
+ * - Each report displays its title, version, description, and a download link.
+ * - The module is integrated into XDMoD's main tab panel and can be activated programmatically.
  *
- * 1) Copy this file and name it to 'xxxx.js', where 'xxxx' is a meaningful (and valid, ProperCased) name which describes this module
+ * Usage and Setup:
+ * - The module ID is "nairr_reports". To display this tab, activate it via the main_tab_panel.
+ * - The reports list is loaded from the `/custom_reports/reports` endpoint using a JsonStore.
+ * - Each report's thumbnail and download link are constructed based on the report's name.
+ * - Toolbar options include: duration selector, print button, and report checkbox (export menu is disabled).
  *
- * 2) Replace occurrences of 'XDMoD.Module.NewModule' with 'XDMoD.Module.xxxx' (using the name you decided on above).
- *
- * 3) Update the value of 'title'
- *
- * 4) Update the value of module_id (see the section on REPORT CHECKBOX for how to name this)
- *
- * 5) Reference this module in the necessary web document as follows:
- *
- *       <script type="text/javascript" src="gui/js/modules/xxxx.js"></script>
- *
- *     NOTE: if your portal module requires the reportCheckbox, you will need the following references (the order IS important):
- *
- *        <script type="text/javascript" src="gui/js/report_builder/ChartDateEditor.js"></script>
- *        <script type="text/javascript" src="gui/js/report_builder/Reporting.js"></script>
- *        <script type="text/javascript" src="gui/js/modules/xxxx.js"></script>
- *
- *
- * 6) The module can now be referenced as follows:
- *       var myModule = new XDMoD.Module.xxxx();
+ * Public API:
+ * - setConfig(config, name): Activates the "nairr_reports" tab in the main_tab_panel.
+ * - initComponent(): Initializes the UI and data fetching logic for the module.
  *
  */
-
 // ===========================================================================
 XDMoD.Module.NairrReports = function (config) {
   XDMoD.Module.NairrReports.superclass.constructor.call(this, config);

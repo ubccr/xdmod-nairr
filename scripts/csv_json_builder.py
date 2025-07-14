@@ -1,3 +1,23 @@
+"""
+generate_xdmod_config.py
+
+This script connects to a Postgres database and extracts configuration and mapping data required for XDMoD (XD Metrics on Demand) NAIRR (National AI Research Resource) integration and reporting.
+
+It generates several configuration files in JSON and CSV formats, using SQL queries to gather information about organizations, users, projects, field of science (FOS) hierarchies, group-to-hierarchy mappings, and cloud project-to-PI mappings. These files are saved to the XDMoD configuration directory, typically located at /data/www/xdmod/etc.
+
+Specifically, this script:
+- Reads database connection details from portal_settings.ini.
+- Queries the database for:
+    - Organization information (organization.json)
+    - User and project PI information (names.csv)
+    - Field of Science hierarchies (hierarchy.csv)
+    - Group-to-hierarchy mapping (group-to-hierarchy.csv)
+    - Cloud project to PI mapping (cloud-project-to-pi.csv)
+- Writes these outputs in the expected format for XDMoD ingestion and configuration.
+
+This script is intended for use in the XDMoD NAIRR deployment workflow as part of automated configuration and data refreshes.
+"""
+
 org_sql = """
 SELECT
   TRIM(o.organization_name) AS "name",

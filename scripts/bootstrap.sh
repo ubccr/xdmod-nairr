@@ -10,31 +10,31 @@ XDMOD_SRC_DIR=`realpath ${XDMOD_SRC_DIR:-$BASEDIR/../../xdmod}`
 REPODIR=`realpath $XDMOD_SRC_DIR`
 REF_DIR=/var/tmp/nairr
 BUILD_DIR=`realpath $XDMOD_SRC_DIR/open_xdmod/build`
+PREFIX="/opt/xdmod"
 
 function copy_template_httpd_conf {
-    cp /opt/xdmod/share/templates/apache.conf /etc/httpd/conf.d/xdmod.conf
+    cp "$PREFIX/share/templates/apache.conf" /etc/httpd/conf.d/xdmod.conf
 }
 
 function move_info_etc_xdmod {
-
-    rm /opt/xdmod/etc/organization.json
-    rm /opt/xdmod/etc/resource_specs.json
-    rm /opt/xdmod/etc/resources.json
-    rm /opt/xdmod/etc/resource_types.json
-    rm /opt/xdmod/etc/hierarchy.json
+    rm "$PREFIX/etc/organization.json"
+    rm "$PREFIX/etc/resource_specs.json"
+    rm "$PREFIX/etc/resources.json"
+    rm "$PREFIX/etc/resource_types.json"
+    rm "$PREFIX/etc/hierarchy.json"
     # Copy the reference data into the /etc/xdmod directory. This is where the      
-    cp $REF_SOURCE/organization.json /opt/xdmod/etc/
-    cp $REF_SOURCE/resource_specs.json /opt/xdmod/etc/
-    cp $REF_SOURCE/resources.json /opt/xdmod/etc/
-    cp $REF_SOURCE/resource_types.json /opt/xdmod/etc/
-    cp $REF_SOURCE/hierarchy.json /opt/xdmod/etc/
+    cp $REF_SOURCE/organization.json "$PREFIX/etc/"
+    cp $REF_SOURCE/resource_specs.json "$PREFIX/etc/"
+    cp $REF_SOURCE/resources.json "$PREFIX/etc/"
+    cp $REF_SOURCE/resource_types.json "$PREFIX/etc/"
+    cp $REF_SOURCE/hierarchy.json "$PREFIX/etc/"
 }
 
 function copy_reports {
-    mkdir /opt/xdmod/reports
-    cp -r /root/nairr_reports/reports/* /opt/xdmod/reports/
-    chmod 770 /opt/xdmod/reports
-    chown -R apache:xdmod /opt/xdmod/reports
+    mkdir "$PREFIX/reports"
+    cp -r /root/nairr_reports/reports/* "$PREFIX/reports/"
+    chmod 770 "$PREFIX/reports"
+    chown -R apache:xdmod "$PREFIX/reports"
 }
 
 
@@ -60,7 +60,6 @@ cp $XDMOD_SRC_DIR/tests/ci/scripts/imagehash /root/bin
 # nairr dependencies
 #
 
-
 yum install -y --enablerepo "powertools" python3-matplotlib python3-pandas ${PYTHON_SCIPY}
 
 # ensure php error logging is set to E_ALL (recommended setting for development)
@@ -69,13 +68,10 @@ sed -i 's/^error_reporting = .*/error_reporting = E_ALL/' /etc/php.ini
 # ensure php command-line errors are logged to a file
 sed -i 's/^;error_log = php_errors.log/error_log = \/var\/log\/php_errors.log/' /etc/php.ini
 
-
-echo 'export PATH="/opt/xdmod/bin:$PATH"' | sudo tee /etc/profile.d/xdmod.sh
+echo "export PATH=\"$PREFIX/bin:\$PATH\"" | sudo tee /etc/profile.d/xdmod.sh
 sudo chmod +x /etc/profile.d/xdmod.sh
 
-
 source /etc/profile.d/xdmod.sh
-
 
 if [ "$XDMOD_TEST_MODE" = "fresh_install" ];
 then
@@ -91,14 +87,13 @@ then
     chown -R mysql:mysql /var/run/mariadb
 
     dnf install -y php-pgsql mod_ssl
-    
-   #Install XDMOD and Modules
-   for dir in $BUILD_DIR/*/; do
-     cd "$dir" || continue
-     ./install --prefix=/opt/xdmod
-     cd - > /dev/null
-   done
 
+    # Install XDMOD and Modules
+    for dir in "$BUILD_DIR"/*/; do
+      cd "$dir" || continue
+      ./install --prefix="$PREFIX"
+      cd - > /dev/null
+    done
 
     mysql_install_db --user mysql
 
@@ -126,14 +121,13 @@ then
     fi
 
     # Download patch directly to /tmp (no cd)
+    #
+    # This patch is a most install patch for xdmod-nairr that 
+    # Adds new resource type for Program
     curl -o /tmp/1942.patch https://patch-diff.githubusercontent.com/raw/ubccr/xdmod/pull/1942.patch
 
-# Apply the patch in /usr/share/xdmod without changing directory
-    patch -d /opt/xdmod/share -p1 < /tmp/1942.patch
-   
-
-    # Persistently add to PATH for all future shells
-    
+    # Apply the patch in $PREFIX/share/xdmod without changing directory
+    patch -d "$PREFIX/share" -p1 < /tmp/1942.patch
 
     ~/bin/services start
     mysql -e "CREATE USER 'root'@'gateway' IDENTIFIED BY '';
@@ -161,17 +155,16 @@ then
     GRANT ALL PRIVILEGES ON *.* TO 'xdmod'@'gateway' WITH GRANT OPTION;
     FLUSH PRIVILEGES;"
 
-    chmod 770 /opt/xdmod/logs
-    chown apache:xdmod /opt/xdmod/logs
-    touch /opt/xdmod/logs/exceptions.log
-    chmod 660 /opt/xdmod/logs/exceptions.log
-    chown apache:xdmod /opt/xdmod/logs/exceptions.log
-    touch /opt/xdmod/logs/query.log
-    chmod 660 /opt/xdmod/logs/query.log
-    chown apache:xdmod /opt/xdmod/logs/query.log
+    chmod 770 "$PREFIX/logs"
+    chown apache:xdmod "$PREFIX/logs"
+    touch "$PREFIX/logs/exceptions.log"
+    chmod 660 "$PREFIX/logs/exceptions.log"
+    chown apache:xdmod "$PREFIX/logs/exceptions.log"
+    touch "$PREFIX/logs/query.log"
+    chmod 660 "$PREFIX/logs/query.log"
+    chown apache:xdmod "$PREFIX/logs/query.log"
 
-
-    sudo /opt/xdmod/share/tools/etl/etl_overseer.php -a xdmod.hpcdb-ingest-common.unknown_organization 
+    "$PREFIX/share/tools/etl/etl_overseer.php" -a xdmod.hpcdb-ingest-common.unknown_organization 
     xdmod-import-csv -t hierarchy -i $REF_DIR/hierarchy.csv
     xdmod-import-csv -t group-to-hierarchy -i $REF_DIR/group-to-hierarchy.csv
 
@@ -179,52 +172,45 @@ then
 
     if [[ "$XDMOD_REALMS" == *"jobs"* ]];
     then
-        sudo -u xdmod /opt/xdmod/bin/xdmod-shredder -r NVIDIA-DGX-Cloud -f slurmjson -d $REF_DIR/data/dgx/postprocessed/ -q
+        sudo -u xdmod "$PREFIX/bin/xdmod-shredder" -r NVIDIA-DGX-Cloud -f slurmjson -d $REF_DIR/data/dgx/postprocessed/ -q
 
-        sudo -u xdmod /opt/xdmod/bin/xdmod-ingestor
+        sudo -u xdmod "$PREFIX/bin/xdmod-ingestor"
     fi
 
     if [[ "$XDMOD_REALMS" == *"cloud"* ]];
     then
-       
-        sudo -u xdmod /opt/xdmod/bin/xdmod-shredder -r Indiana-Jetstream2-GPU -f openstack -d $REF_DIR/data/jetstream/nairr-jetstream2
-        sudo -u xdmod /opt/xdmod/bin/xdmod-shredder -r Indiana-Jetstream2-GPU -f openstack -d $REF_DIR/data/jetstream/nairr-jetstream2-lm/  
-        sudo -u xdmod /opt/xdmod/bin/xdmod-shredder -r Indiana-Jetstream2-GPU -f openstack -d $REF_DIR/data/jetstream/nairr-jetstream2-gpu/
-
-
-
+        sudo -u xdmod "$PREFIX/bin/xdmod-shredder" -r Indiana-Jetstream2-GPU -f openstack -d $REF_DIR/data/jetstream/nairr-jetstream2
+        sudo -u xdmod "$PREFIX/bin/xdmod-shredder" -r Indiana-Jetstream2-GPU -f openstack -d $REF_DIR/data/jetstream/nairr-jetstream2-lm/  
+        sudo -u xdmod "$PREFIX/bin/xdmod-shredder" -r Indiana-Jetstream2-GPU -f openstack -d $REF_DIR/data/jetstream/nairr-jetstream2-gpu/
     fi
     
     echo "Nairr Bootstraping Complete"
-    sudo -u xdmod /opt/xdmod/share/tools/etl/etl_overseer.php -p nairr.resource-actions-bootstrap
-    sudo -u xdmod /opt/xdmod/share/tools/etl/etl_overseer.php -p nairr.resource-actions -m 2000-01-01
-    sudo -u xdmod /opt/xdmod/bin/xdmod-build-filter-lists --realm ResourceActions --quiet
+    sudo -u xdmod "$PREFIX/share/tools/etl/etl_overseer.php" -p nairr.resource-actions-bootstrap
+    sudo -u xdmod "$PREFIX/share/tools/etl/etl_overseer.php" -p nairr.resource-actions -m 2000-01-01
+    sudo -u xdmod "$PREFIX/bin/xdmod-build-filter-lists" --realm ResourceActions --quiet
 
     echo "Nairr Bootstraping Complete"
 
     echo "Starting XDMoD Ingestor"
-    sudo -u xdmod /opt/xdmod/bin/xdmod-ingestor
+    sudo -u xdmod "$PREFIX/bin/xdmod-ingestor"
     echo "XDMoD Ingestor Completed"
 
     echo "Loading CLoud TO PI Data"
-    sudo -u xdmod /opt/xdmod/bin/xdmod-import-csv -t cloud-project-to-pi -i $REF_DIR/cloud-project-to-pi.csv 
+    sudo -u xdmod "$PREFIX/bin/xdmod-import-csv" -t cloud-project-to-pi -i $REF_DIR/cloud-project-to-pi.csv 
 
-
-    sudo -u xdmod /opt/xdmod/bin/xdmod-ingestor --datatype openstack
-    sudo -u xdmod /opt/xdmod/bin/xdmod-ingestor --aggregate=cloud --last-modified-start-date "$last_modified_start_date"
+    sudo -u xdmod "$PREFIX/bin/xdmod-ingestor" --datatype openstack
+    sudo -u xdmod "$PREFIX/bin/xdmod-ingestor" --aggregate=cloud --last-modified-start-date "$last_modified_start_date"
     
     echo "Creating XDMoD Users"
-    sudo -u xdmod /opt/xdmod/bin/xdmod-import-csv -t names -i $REF_DIR/names.csv
+    sudo -u xdmod "$PREFIX/bin/xdmod-import-csv" -t names -i $REF_DIR/names.csv
 
-    sudo -u xdmod /opt/xdmod/bin/xdmod-ingestor
+    sudo -u xdmod "$PREFIX/bin/xdmod-ingestor"
     
-
     echo "Creating XDMOD additional users"
 
-    php $XDMOD_SRC_DIR/tests/ci/scripts/create_xdmod_users.php -x /opt/xdmod/share
+    php $XDMOD_SRC_DIR/tests/ci/scripts/create_xdmod_users.php -x "$PREFIX/share"
 
     echo "XDMoD Bootstraping Complete"
-
 fi
 
 

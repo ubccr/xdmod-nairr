@@ -13,8 +13,6 @@
     "bin": ["fstree/usr/local/bin/"],
     "doc": ["LICENSE"],
     "lib": ["scripts/"],
-    "etc": {
-      "configuration/": ""
-    }
+    "etc": ["configuration/"]
   }
 }
