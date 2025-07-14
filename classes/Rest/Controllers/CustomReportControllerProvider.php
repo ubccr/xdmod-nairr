@@ -65,7 +65,6 @@ class CustomReportControllerProvider extends BaseControllerProvider
      */
     public function getReports(Request $request, Application $app)
     {
-       // $user = $this->authorize($request, array('acl.custom-query-tab'));
 
         list($_, $report_config) = $this->getConfiguration();
 
@@ -98,7 +97,6 @@ class CustomReportControllerProvider extends BaseControllerProvider
      */
     public function getReport(Request $request, Application $app, $report_id)
     {
-       // $user = $this->authorize($request, array('acl.custom-query-tab'));
 
         list($base_path, $report_config) = $this->getConfiguration();
 
@@ -129,7 +127,6 @@ class CustomReportControllerProvider extends BaseControllerProvider
      */
     public function getReportThumbnail(Request $request, Application $app, $report_id)
     {
-        //$user = $this->authorize($request, array('acl.custom-query-tab'));
 
         list($base_path, $report_config) = $this->getConfiguration();
 

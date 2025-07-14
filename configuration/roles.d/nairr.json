@@ -1,16 +1,6 @@
 {
   "roles": {
     "cd": {
-      "display": "Center Director",
-      "type": "data",
-      "hierarchies": [
-        {
-          "level": 400,
-          "filter_override": false
-        }
-      ],
-      "dimensions": ["provider"],
-      "extends": "default",
       "permitted_modules": [
         {
           "name": "nairr_reports",
@@ -24,16 +14,6 @@
       ]
     },
     "cs": {
-      "display": "Center Staff",
-      "type": "data",
-      "hierarchies": [
-        {
-          "level": 300,
-          "filter_override": false
-        }
-      ],
-      "dimensions": ["provider"],
-      "extends": "default",
       "permitted_modules": [
         {
           "name": "nairr_reports",
