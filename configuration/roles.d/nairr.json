@@ -1,7 +1,7 @@
 {
-  "roles": {
-    "cd": {
-      "permitted_modules": [
+  "+roles": {
+    "+cd": {
+      "+permitted_modules": [
         {
           "name": "nairr_reports",
           "title": "Nairr Reports",
@@ -13,8 +13,8 @@
         }
       ]
     },
-    "cs": {
-      "permitted_modules": [
+    "+cs": {
+      "+permitted_modules": [
         {
           "name": "nairr_reports",
           "title": "Nairr Reports",
