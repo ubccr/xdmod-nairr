@@ -37,6 +37,7 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
   module_id: "nairr_reports", // <-- rename this (see the section on REPORT CHECKBOX for how to name this)
 
   charStore: false,
+  usesToolbar: false,
 
   initComponent: function () {
     // ------------------------------------------------------------------
