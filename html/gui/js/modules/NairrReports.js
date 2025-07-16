@@ -36,14 +36,6 @@ Ext.apply(XDMoD.Module.NairrReports, {
 Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
   module_id: "nairr_reports", // <-- rename this (see the section on REPORT CHECKBOX for how to name this)
 
-  usesToolbar: true,
-
-  toolbarItems: {
-    durationSelector: true,
-    exportMenu: false,
-    printButton: true,
-    reportCheckbox: true,
-  }, //
   charStore: false,
 
   initComponent: function () {
