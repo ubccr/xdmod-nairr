@@ -13,7 +13,7 @@
  * - The module ID is "nairr_reports". To display this tab, activate it via the main_tab_panel.
  * - The reports list is loaded from the `/custom_reports/reports` endpoint using a JsonStore.
  * - Each report's thumbnail and download link are constructed based on the report's name.
- * - Toolbar options include: duration selector, print button, and report checkbox (export menu is disabled).
+ * - Toolbar is currently disabled.
  *
  * Public API:
  * - setConfig(config, name): Activates the "nairr_reports" tab in the main_tab_panel.
