@@ -11,6 +11,16 @@
           "userManualSectionName": "Nairr Reports",
           "tooltip": ""
         }
+      ],
+      "+query_descripters": [
+        {
+          "realm": "CloudBankSpend",
+          "group_by": "cb_nairrproject"
+        },
+        {
+          "realm": "CloudBankFund",
+          "group_by": "cb_nairrproject"
+        }
       ]
     },
     "+cs": {
