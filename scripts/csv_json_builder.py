@@ -145,7 +145,7 @@ where
   rm.allocations_process_id = 108
   and res.production_begin_date is not null
   and rm.request_number is not null
-  and resource_name in ('Indiana Jetstream2 GPU',)
+  and resource_name in ('Indiana Jetstream2 GPU')
 """
 import configparser
 import csv
@@ -207,7 +207,7 @@ def org_builder(cur, query, org_list):
 def main():
 
     config = configparser.ConfigParser()
-    config.read(f"{XDMOD_CONFIG_PATH}/portal_settings.ini")
+    config.read(f"{XDMOD_CONFIG_PATH}/portal_settings.d/nairr.ini")
 
     orgs = []
     names = []
