@@ -6,7 +6,6 @@ use CCR\DB;
 use CCR\Log;
 use Exception;
 use Psr\Log\LoggerInterface;
-
 use Silex\Application;
 use Silex\ControllerCollection;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +13,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CustomReportControllerProvider extends BaseControllerProvider
 {
-     const LOG_MODULE = 'custom-report-controller';
+    public const LOG_MODULE = 'custom-report-controller';
 
     /**
      * @var LoggerInterface
@@ -54,6 +53,8 @@ class CustomReportControllerProvider extends BaseControllerProvider
 
         $controller->get("$root/report/{report_id}", "$current::getReport")
             ->assert('report_id', '(\w|_|-])+');
+
+        $controller->get("$root/report-directory", "$current::getReportDirectory");
     }
 
     /**
@@ -66,7 +67,10 @@ class CustomReportControllerProvider extends BaseControllerProvider
     public function getReports(Request $request, Application $app)
     {
 
-        list($_, $report_config) = $this->getConfiguration();
+        list($_, $report_config) = $this->getConfiguration(
+            $request->get('month', null),
+            $request->get('year', null)
+        );
 
         $report_list = array();
 
@@ -75,7 +79,8 @@ class CustomReportControllerProvider extends BaseControllerProvider
                 'name' => $report_id,
                 'version' => $report_meta['version'] ,
                 'title' => $report_meta['title'] ,
-                'description' => $report_meta['description']
+                'description' => $report_meta['description'],
+                'timestamp' => $report_meta['timestamp'],
             ));
         }
 
@@ -98,7 +103,10 @@ class CustomReportControllerProvider extends BaseControllerProvider
     public function getReport(Request $request, Application $app, $report_id)
     {
 
-        list($base_path, $report_config) = $this->getConfiguration();
+        list($base_path, $report_config) = $this->getConfiguration(
+            $request->get('month', null),
+            $request->get('year', null)
+        );
 
         if (isset($report_config[$report_id])) {
             return $app->sendFile(
@@ -116,6 +124,73 @@ class CustomReportControllerProvider extends BaseControllerProvider
 
         throw new NotFoundHttpException('Report does not exist');
     }
+
+
+    public function getReportDirectory(Request $request, Application $app)
+    {
+        $base_path = $this->getBasePath();
+
+        $monthOrder = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        // Root of JSON tree
+        $result = [
+            'text' => 'Reports',
+            'expanded' => true,
+            'children' => []
+        ];
+
+        // Get all year directories
+        $yearDirs = array_filter(glob($base_path . '/*'), 'is_dir');
+
+        foreach ($yearDirs as $yearPath) {
+            $year = basename($yearPath);
+
+            // Get and sort month directories
+            $monthDirs = array_filter(glob($yearPath . '/*'), 'is_dir');
+            usort($monthDirs, function ($a, $b) use ($monthOrder) {
+
+                $monthA = ucfirst(strtolower(basename($a)));
+                $monthB = ucfirst(strtolower(basename($b)));
+
+
+                $indexA = array_search($monthA, $monthOrder);
+                $indexB = array_search($monthB, $monthOrder);
+
+                // Fall back to string comparison if not found in monthOrder
+                if ($indexA === false || $indexB === false) {
+                    return strcasecmp($monthA, $monthB);
+                }
+
+                return $indexA - $indexB;
+            });
+
+            // Add each month as a child node
+            $monthChildren = [];
+            foreach ($monthDirs as $monthPath) {
+                $month = basename($monthPath);
+                $monthChildren[] = [
+                    'text' => $month,
+                    'leaf' => true
+                ];
+            }
+
+            // Only add year node if it contains months
+            if (!empty($monthChildren)) {
+                $result['children'][] = [
+                    'text' => $year,
+                    'children' => $monthChildren
+                ];
+            }
+        }
+
+        return $app->json($result['children']);
+    }
+
+
+
     /**
      * Get the requested data.
      *
@@ -128,7 +203,10 @@ class CustomReportControllerProvider extends BaseControllerProvider
     public function getReportThumbnail(Request $request, Application $app, $report_id)
     {
 
-        list($base_path, $report_config) = $this->getConfiguration();
+        list($base_path, $report_config) = $this->getConfiguration(
+            $request->get('month', null),
+            $request->get('year', null)
+        );
 
         if (isset($report_config[$report_id])) {
             return $app->sendFile($base_path . '/' . $report_config[$report_id]['thumbnail']);
@@ -139,15 +217,33 @@ class CustomReportControllerProvider extends BaseControllerProvider
 
     /**
      * Get the Custom Report configuration file.
+     *
+     * /TODO This needs to be modified to use monthly and year report config files
      */
-    private function getConfiguration()
-    {
-      $base_path = \xd_utilities\getConfiguration('custom_reports', 'base_path');
 
+    private function getBasePath()
+    {
+        $base_path = \xd_utilities\getConfiguration('custom_reports', 'base_path');
+
+        if (!is_dir($base_path)) {
+            throw new Exception("Custom reports base path does not exist: $base_path");
+        }
+
+        return $base_path;
+    }
+    private function getConfiguration($month = null, $year = null)
+    {
+        // Get the base path from the getConfiguration
+        //  $base
+        $base_path = $this->getBasePath();
+        if ($month && $year) {
+            $base_path .= '/' . $year . '/' . $month;
+        }
 
         $report_config_str = file_get_contents($base_path . '/custom_reports.json');
         $report_config = json_decode($report_config_str, true);
 
         return array($base_path, $report_config);
     }
+
 }

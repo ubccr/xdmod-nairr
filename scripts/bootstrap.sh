@@ -4,9 +4,9 @@
 # docker instances. However, since it is designed to test a real install, the
 # set of commands that are run would work on a real production system.
 
-BASEDIR=/root/xdmod-nairr/tests/ci
-REF_SOURCE=$(realpath $BASEDIR/../artifacts/nairr)
-XDMOD_SRC_DIR=$(realpath ${XDMOD_SRC_DIR:-$BASEDIR/../../xdmod})
+BASEDIR=/root/xdmod-nairr/scripts
+REF_SOURCE=$(realpath $BASEDIR/../tests/artifacts/nairr)
+XDMOD_SRC_DIR=$(realpath ${XDMOD_SRC_DIR:-$BASEDIR/../xdmod})
 REPODIR=$(realpath $XDMOD_SRC_DIR)
 REF_DIR=/var/tmp/nairr
 BUILD_DIR=$(realpath $XDMOD_SRC_DIR/open_xdmod/build)
@@ -33,7 +33,7 @@ function move_info_etc_xdmod {
 
 function copy_reports {
   mkdir /opt/xdmod/reports
-  cp -r /root/nairr_reports/reports/* /opt/xdmod/reports/
+  cp -r /root/reports/* /opt/xdmod/reports/
   chmod 770 /opt/xdmod/reports
   chown -R apache:xdmod /opt/xdmod/reports
 }
@@ -115,7 +115,7 @@ if [ "$XDMOD_TEST_MODE" = "fresh_install" ]; then
   move_info_etc_xdmod
   copy_template_httpd_conf
 
-  if [ -d "/root/nairr_reports" ]; then
+  if [ -d "/root/reports" ]; then
     copy_reports
   fi
 
