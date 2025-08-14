@@ -66,7 +66,8 @@ class CustomReportControllerProvider extends BaseControllerProvider
      */
     public function getReports(Request $request, Application $app)
     {
-
+        $user = $this->getUserFromRequest($request);
+        $user_email = $user->getEmailAddress();
         list($_, $report_config) = $this->getConfiguration(
             $request->get('month', null),
             $request->get('year', null)
@@ -74,7 +75,25 @@ class CustomReportControllerProvider extends BaseControllerProvider
 
         $report_list = array();
 
+
+        $viewer_config = $this->getViewerConfig();
+        $prefixes = array_keys($viewer_config);
+        $pattern = '/^(' . implode('|', array_map('preg_quote', $prefixes)) . ')/';
+
+
         foreach ($report_config as $report_id => $report_meta) {
+
+            if (preg_match($pattern, $report_id, $matches)) {
+                // Get the matched prefix directly from regex
+                $matched_prefix = $matches[1];
+
+                // Defensive: Ensure the structure exists
+                if (!in_array($user_email, $viewer_config[$matched_prefix]['viewers'])) {
+                    continue;
+                }
+                // If email is not a viewer, don't add to $return_array
+            }
+            // No prefix match, include report by default
             array_push($report_list, array(
                 'name' => $report_id,
                 'version' => $report_meta['version'] ,
@@ -82,6 +101,7 @@ class CustomReportControllerProvider extends BaseControllerProvider
                 'description' => $report_meta['description'],
                 'timestamp' => $report_meta['timestamp'],
             ));
+
         }
 
         return $app->json(array(
@@ -107,6 +127,8 @@ class CustomReportControllerProvider extends BaseControllerProvider
             $request->get('month', null),
             $request->get('year', null)
         );
+
+
 
         if (isset($report_config[$report_id])) {
             return $app->sendFile(
@@ -231,6 +253,7 @@ class CustomReportControllerProvider extends BaseControllerProvider
 
         return $base_path;
     }
+
     private function getConfiguration($month = null, $year = null)
     {
         // Get the base path from the getConfiguration
@@ -244,6 +267,18 @@ class CustomReportControllerProvider extends BaseControllerProvider
         $report_config = json_decode($report_config_str, true);
 
         return array($base_path, $report_config);
+    }
+
+    private function getViewerConfig()
+    {
+        $base_path = $this->getBasePath();
+        $viewer_config_str = file_get_contents($base_path . '/report_reviewer.json');
+        $viewer_config = json_decode($viewer_config_str, true);
+        if (!$viewer_config) {
+            throw new Exception("Failed to parse viewer configuration file.");
+        }
+        return $viewer_config;
+
     }
 
 }
