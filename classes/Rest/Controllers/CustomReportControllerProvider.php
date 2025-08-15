@@ -66,7 +66,7 @@ class CustomReportControllerProvider extends BaseControllerProvider
      */
     public function getReports(Request $request, Application $app)
     {
-        $user = $this->getUserFromRequest($request);
+        $user = $this->authorize($request, array("acl.nairr-reports"));
         $user_email = $user->getEmailAddress();
         list($_, $report_config) = $this->getConfiguration(
             $request->get('month', null),
@@ -76,24 +76,13 @@ class CustomReportControllerProvider extends BaseControllerProvider
         $report_list = array();
 
 
-        $viewer_config = $this->getViewerConfig();
-        $prefixes = array_keys($viewer_config);
-        $pattern = '/^(' . implode('|', array_map('preg_quote', $prefixes)) . ')/';
-
-
         foreach ($report_config as $report_id => $report_meta) {
 
-            if (preg_match($pattern, $report_id, $matches)) {
-                // Get the matched prefix directly from regex
-                $matched_prefix = $matches[1];
+            $is_viewable = $this->isViewable($report_id, $user_email);
 
-                // Defensive: Ensure the structure exists
-                if (!in_array($user_email, $viewer_config[$matched_prefix]['viewers'])) {
-                    continue;
-                }
-                // If email is not a viewer, don't add to $return_array
+            if (!$is_viewable) {
+                continue;
             }
-            // No prefix match, include report by default
             array_push($report_list, array(
                 'name' => $report_id,
                 'version' => $report_meta['version'] ,
@@ -123,10 +112,19 @@ class CustomReportControllerProvider extends BaseControllerProvider
     public function getReport(Request $request, Application $app, $report_id)
     {
 
+        $user = $this->authorize($request, array("acl.nairr-reports"));
+
+
         list($base_path, $report_config) = $this->getConfiguration(
             $request->get('month', null),
             $request->get('year', null)
         );
+
+        $user_email = $user->getEmailAddress();
+        $is_viewable = $this->isViewable($report_id, $user_email);
+        if (!$is_viewable) {
+            throw new NotFoundHttpException('You do not have permission to view this report');
+        }
 
 
 
@@ -150,6 +148,8 @@ class CustomReportControllerProvider extends BaseControllerProvider
 
     public function getReportDirectory(Request $request, Application $app)
     {
+        $user = $this->authorize($request, array("acl.nairr-reports"));
+
         $base_path = $this->getBasePath();
 
         $monthOrder = [
@@ -210,21 +210,18 @@ class CustomReportControllerProvider extends BaseControllerProvider
 
         return $app->json($result['children']);
     }
-
-
-
     /**
      * Get the requested data.
      *
      * @param Request $request
      * @param Application $app
      * @param string $report_id
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse!in_array($user_email, $viewer_config[$matched_prefix]['viewers']))
      * @throws NotFoundHttpException if no report exists with the given ID.
      */
     public function getReportThumbnail(Request $request, Application $app, $report_id)
     {
-
+        $user = $this->authorize($request, array("acl.nairr-reports"));
         list($base_path, $report_config) = $this->getConfiguration(
             $request->get('month', null),
             $request->get('year', null)
@@ -242,6 +239,22 @@ class CustomReportControllerProvider extends BaseControllerProvider
      *
      * /TODO This needs to be modified to use monthly and year report config files
      */
+
+    private function isViewable($report_id, $user_email)
+    {
+        $viewer_config = $this->getViewerConfig();
+        $prefixes = array_keys($viewer_config);
+        $pattern = '/^(' . implode('|', array_map('preg_quote', $prefixes)) . ')/';
+
+        if (preg_match($pattern, $report_id, $matches)) {
+            $matched_prefix = $matches[1];
+
+            return in_array($user_email, $viewer_config[$matched_prefix]['viewers']);
+
+        }
+        return true;
+
+    }
 
     private function getBasePath()
     {
