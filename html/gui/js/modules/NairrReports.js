@@ -89,16 +89,14 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
       `,
       updateReports: function (records) {
         this.removeAll(true);
-        this.body.update("");
         if (!records.length) {
           this.body.update(this.emptyText);
           this.doLayout();
           return;
         }
-
+        this.body.update("");
         Ext.each(records, function (record) {
           const report = record.data;
-          console.log(report);
           const panel = new Ext.Panel({
             title: report.title,
             cls: "custom-report-panel",
@@ -151,10 +149,11 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
       items: [reportContainer],
     });
 
-    reportStore.on("load", function (store, records) {
-      reportContainer.updateReports(records);
+    reportContainer.on("afterrender", function () {
+      reportStore.on("load", function (store, records) {
+        reportContainer.updateReports(records);
+      });
     });
-
     const expandAndSelect = (tree, year, month, clickNode) => {
       const yearNode = tree.getRootNode().findChild("text", String(year));
       if (!yearNode) return;
