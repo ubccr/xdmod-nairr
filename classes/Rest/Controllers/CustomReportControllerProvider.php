@@ -146,23 +146,13 @@ class CustomReportControllerProvider extends BaseControllerProvider
     }
 
 
+
     public function getReportDirectory(Request $request, Application $app)
     {
-        $user = $this->authorize($request, array("acl.nairr-reports"));
-
+        $user = $this->authorize($request, ["acl.nairr-reports"]);
         $base_path = $this->getBasePath();
 
-        $monthOrder = [
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        ];
-
-        // Root of JSON tree
-        $result = [
-            'text' => 'Reports',
-            'expanded' => true,
-            'children' => []
-        ];
+        $result = [];
 
         // Get all year directories
         $yearDirs = array_filter(glob($base_path . '/*'), 'is_dir');
@@ -170,46 +160,36 @@ class CustomReportControllerProvider extends BaseControllerProvider
         foreach ($yearDirs as $yearPath) {
             $year = basename($yearPath);
 
-            // Get and sort month directories
+            // Get and sort month directories numerically
             $monthDirs = array_filter(glob($yearPath . '/*'), 'is_dir');
-            usort($monthDirs, function ($a, $b) use ($monthOrder) {
-
-                $monthA = ucfirst(strtolower(basename($a)));
-                $monthB = ucfirst(strtolower(basename($b)));
-
-
-                $indexA = array_search($monthA, $monthOrder);
-                $indexB = array_search($monthB, $monthOrder);
-
-                // Fall back to string comparison if not found in monthOrder
-                if ($indexA === false || $indexB === false) {
-                    return strcasecmp($monthA, $monthB);
-                }
-
-                return $indexA - $indexB;
+            usort($monthDirs, function ($a, $b) {
+                return (int) basename($a) <=> (int) basename($b);
             });
 
             // Add each month as a child node
             $monthChildren = [];
             foreach ($monthDirs as $monthPath) {
-                $month = basename($monthPath);
+                $monthNum = (int) basename($monthPath);
+                $dateObj = \DateTime::createFromFormat('!m', $monthNum);
+                $monthName = $dateObj->format('F');
                 $monthChildren[] = [
-                    'text' => $month,
+                    'text' => $monthName,
                     'leaf' => true
                 ];
             }
 
             // Only add year node if it contains months
             if (!empty($monthChildren)) {
-                $result['children'][] = [
+                $result[] = [
                     'text' => $year,
                     'children' => $monthChildren
                 ];
             }
         }
 
-        return $app->json($result['children']);
+        return $app->json($result);
     }
+
     /**
      * Get the requested data.
      *
@@ -267,19 +247,34 @@ class CustomReportControllerProvider extends BaseControllerProvider
         return $base_path;
     }
 
+
     private function getConfiguration($month = null, $year = null)
     {
-        // Get the base path from the getConfiguration
-        //  $base
+        // Get the base path
         $base_path = $this->getBasePath();
-        if ($month && $year) {
-            $base_path .= '/' . $year . '/' . $month;
+
+        // Convert month name to number
+        $monthNum = null;
+        if ($month) {
+            $dateObj = \DateTime::createFromFormat('F', ucfirst(strtolower($month)));
+            if ($dateObj) {
+                $monthNum = (int) $dateObj->format('m'); // 1–12
+            }
         }
 
-        $report_config_str = file_get_contents($base_path . '/custom_reports.json');
+        // Append year/month to base path if both exist
+        if ($monthNum && $year) {
+            $base_path .= '/' . $year . '/' . $monthNum;
+        }
+
+        // Load the configuration file
+        $configFile = $base_path . '/custom_reports.json';
+
+
+        $report_config_str = file_get_contents($configFile);
         $report_config = json_decode($report_config_str, true);
 
-        return array($base_path, $report_config);
+        return [$base_path, $report_config];
     }
 
     private function getViewerConfig()
