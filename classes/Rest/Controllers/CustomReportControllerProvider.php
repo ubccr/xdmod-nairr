@@ -196,7 +196,7 @@ class CustomReportControllerProvider extends BaseControllerProvider
      * @param Request $request
      * @param Application $app
      * @param string $report_id
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse!in_array($user_email, $viewer_config[$matched_prefix]['viewers']))
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      * @throws NotFoundHttpException if no report exists with the given ID.
      */
     public function getReportThumbnail(Request $request, Application $app, $report_id)
@@ -217,7 +217,6 @@ class CustomReportControllerProvider extends BaseControllerProvider
     /**
      * Get the Custom Report configuration file.
      *
-     * /TODO This needs to be modified to use monthly and year report config files
      */
 
     private function isViewable($report_id, $user_email)
