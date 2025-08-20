@@ -104,7 +104,7 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
               <div class="custom-report-thumb-wrap" id="${report.name}">
                 <div class="custom-report-thumb">
                   <img src="${XDMoD.REST.prependPathBase("/custom_reports/thumbnail/")}${report.name}${getCustomReportQueryString()}"
-                       title="${report.name}" style="width:300px;height:150px;" />
+                       title="${report.name}" />
                 </div>
                 <div class="custom-report-thumb-desc">
                   <h2 class="custom-report-thumb-title">${report.title}</h2>
