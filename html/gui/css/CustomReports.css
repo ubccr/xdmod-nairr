@@ -10,6 +10,9 @@ div.custom-report-thumb-wrap {
   margin: 5px;
   border-right: 1px solid #e0e0e0;
   border-bottom: 1px solid #e0e0e0;
+  width: 250px;
+  aspect-ratio: 5 / 3;
+  object-fit: cover;
 }
 
 .custom-report-thumb-title {
