@@ -1,51 +1,59 @@
 {
-    "#": "Populates the funds table from the staging_funds table. This includes resolving the dimension values to foreign key ids",
-    "table_definition": {
-        "$ref": "${table_definition_dir}/cloudbank/production/funds.json#/table_definition"
+  "#": "Populates the funds table from the staging_funds table. This includes resolving the dimension values to foreign key ids",
+  "table_definition": {
+    "$ref": "${table_definition_dir}/cloudbank/production/funds.json#/table_definition"
+  },
+  "source_query": {
+    "records": {
+      "id": "sf.id",
+      "funder_id": "f.funder_id",
+      "project_id": "CASE WHEN sf.id = -1 THEN 'Unknown' WHEN sf.id LIKE 'NAIRR%' THEN sf.id ELSE CONCAT('NAIRR', sf.id) END",
+      "nsf_directorate_id": "nd.nsf_directorate_id",
+      "nsf_division_id": "dv.nsf_division_id",
+      "field_of_science_id": "COALESCE(fos.field_of_science_id, -1)",
+      "title": "CONCAT(sf.id, ' ', sf.title)",
+      "start_date": "sf.start_date",
+      "end_date": "sf.end_date",
+      "start_day_id": "YEAR(sf.start_date) * 100000 + DAYOFYEAR(sf.start_date)",
+      "end_day_id": "YEAR(sf.end_date) * 100000 + DAYOFYEAR(sf.end_date)"
     },
-    "source_query": {
-        "records": {
-            "id": "sf.id",
-            "funder_id": "f.funder_id",
-            "project_id": "CASE WHEN sf.id = -1 THEN 'Unknown' WHEN sf.id LIKE 'NAIRR%' THEN sf.id ELSE CONCAT('NAIRR', sf.id) END",
-            "nsf_directorate_id": "nd.nsf_directorate_id",
-            "nsf_division_id": "dv.nsf_division_id",
-            "title": "CONCAT(sf.id, ' ', sf.title)",
-            "start_date": "sf.start_date",
-            "end_date": "sf.end_date",
-            "start_day_id": "YEAR(sf.start_date) * 100000 + DAYOFYEAR(sf.start_date)",
-            "end_day_id": "YEAR(sf.end_date) * 100000 + DAYOFYEAR(sf.end_date)"
-        },
-        "joins": [
-            {
-                "name": "staging_funds",
-                "schema": "${SOURCE_SCHEMA}",
-                "alias": "sf"
-            },
-            {
-                "name": "funders",
-                "schema": "${SOURCE_SCHEMA}",
-                "alias": "f",
-                "on": "f.name = sf.funder"
-            },
-            {
-                "name": "persons",
-                "schema": "${SOURCE_SCHEMA}",
-                "alias": "pi",
-                "on": "pi.id = sf.pi"
-            },
-            {
-                "name": "nsf_directorates",
-                "schema": "${SOURCE_SCHEMA}",
-                "alias": "nd",
-                "on": "nd.name = sf.nsf_directorate"
-            },
-            {
-                "name": "nsf_divisions",
-                "schema": "${SOURCE_SCHEMA}",
-                "alias": "dv",
-                "on": "dv.name = sf.nsf_division AND dv.nsf_directorate_id = nd.nsf_directorate_id"
-            }
-        ]
-    }
+    "joins": [
+      {
+        "name": "staging_funds",
+        "schema": "${SOURCE_SCHEMA}",
+        "alias": "sf"
+      },
+      {
+        "name": "funders",
+        "schema": "${SOURCE_SCHEMA}",
+        "alias": "f",
+        "on": "f.name = sf.funder"
+      },
+      {
+        "name": "persons",
+        "schema": "${SOURCE_SCHEMA}",
+        "alias": "pi",
+        "on": "pi.id = sf.pi"
+      },
+      {
+        "name": "nsf_directorates",
+        "schema": "${SOURCE_SCHEMA}",
+        "alias": "nd",
+        "on": "nd.name = sf.nsf_directorate"
+      },
+      {
+        "name": "nsf_divisions",
+        "schema": "${SOURCE_SCHEMA}",
+        "alias": "dv",
+        "on": "dv.name = sf.nsf_division AND dv.nsf_directorate_id = nd.nsf_directorate_id"
+      },
+      {
+        "name": "fields_of_science",
+        "schema": "${SOURCE_SCHEMA}",
+        "alias": "fos",
+        "on": "sf.field_of_science = fos.name",
+        "type": "LEFT"
+      }
+    ]
+  }
 }
