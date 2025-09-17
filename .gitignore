@@ -53,6 +53,9 @@ bower_components
 
 .php-cs-fixer.cache
 
+
+
+
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio
 
@@ -348,3 +351,4 @@ launch.json
 
 # Include test specific diff changes
 !/tests/ci/diff/*.diff
+configuration/portal_settings.d/nairr.ini
