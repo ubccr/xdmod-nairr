@@ -51,6 +51,7 @@ bower_components
 .bower-registry
 .bower-tmp
 
+.php-cs-fixer.cache
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio
