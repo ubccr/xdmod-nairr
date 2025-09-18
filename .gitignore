@@ -351,4 +351,4 @@ launch.json
 
 # Include test specific diff changes
 !/tests/ci/diff/*.diff
-configuration/portal_settings.d/nairr.ini
+
