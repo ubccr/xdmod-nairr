@@ -57,3 +57,9 @@ div.custom-report-thumb-wrap {
   font-size: 14px;
   color: #aaa;
 }
+
+#nairr_reports_container .x-panel-body {
+  overflow-y: auto !important;
+  max-height: 100%;
+  /* or use a pixel value if needed */
+}

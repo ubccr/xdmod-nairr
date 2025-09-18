@@ -13,6 +13,14 @@ function buildReportUrl(year, month) {
   );
 }
 
+function triggerReportDownload(reportId, year, month) {
+  const qs = [];
+  if (year) qs.push(`year=${encodeURIComponent(year)}`);
+  if (month) qs.push(`month=${encodeURIComponent(month)}`);
+  const url = `${XDMoD.REST.prependPathBase("/custom_reports/report/")}${reportId}${qs.length ? "?" + qs.join("&") : ""}`;
+  window.location.href = url;
+}
+
 XDMoD.Module.NairrReports = function (config) {
   XDMoD.Module.NairrReports.superclass.constructor.call(this, config);
 };
@@ -152,6 +160,14 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
     reportContainer.on("afterrender", function () {
       reportStore.on("load", function (store, records) {
         reportContainer.updateReports(records);
+        const params = new URLSearchParams(window.location.search);
+        const reportId = params.get("report_id");
+        if (reportId && records.some((r) => r.data.name === reportId)) {
+          triggerReportDownload(reportId, defaultYear, defaultMonth);
+          const newUrl = new URL(window.location.href);
+          newUrl.searchParams.delete("report_id");
+          window.history.replaceState({}, "", newUrl.toString());
+        }
       });
     });
     const expandAndSelect = (tree, year, month, clickNode) => {
