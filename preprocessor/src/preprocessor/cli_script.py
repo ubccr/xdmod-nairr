@@ -12,6 +12,7 @@ import stat
 import csv
 import os
 import argparse
+import math
 import tempfile
 import shutil
 import pandas as pd
@@ -128,7 +129,15 @@ def main():
     if 'sheet_name' in conf:
         mapping_data = pd.read_excel(conf['mapping_file'], sheet_name=conf['sheet_name'])
         for row in mapping_data.iterrows():
-            mapping[row[1][conf['account_col']].lower()] = row[1][conf['project_col']].lower()
+            account = row[1][conf['account_col']]
+            if isinstance(account, float):
+                # TAMU uses integers as account names!
+                if math.isnan(account):
+                    continue
+
+                account = str(math.floor(account))
+
+            mapping[account.lower()] = row[1][conf['project_col']].lower()
 
     if logger.isEnabledFor(logging.DEBUG):
         for m, v in mapping.items():
@@ -137,6 +146,10 @@ def main():
     trnsl = None
     if args.resource in ['delta', 'deltaai']:
         trnsl = helpers.NcsaTranslator(mapping)
+    elif args.resource == 'dgx':
+        trnsl = helpers.DgxTranslator(mapping)
+    elif args.resource == 'aces':
+        trnsl = helpers.TamuTranslator(mapping)
     elif args.resource == 'expanse':
         trnsl = helpers.SdscTranslator(mapping)
 

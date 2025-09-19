@@ -48,6 +48,28 @@ def fileiterator(prefix, age_days, fileregex):
             yield (fullpath, filename)
 
 
+class DgxTranslator:
+    def __init__(self, _):
+        pass
+
+    def translate(self, _, filepath):
+        filename = os.path.basename(filepath)
+        fparts = filename.split(".")
+        return (fparts[2], 'dgx')
+
+class TamuTranslator:
+    def __init__(self, mapping):
+        self.mapping = mapping
+
+    def translate(self, job, _):
+        charge_id = job['account']
+
+        if charge_id in self.mapping:
+            return (self.mapping[charge_id], 'aces')
+
+        return (None, None)
+
+
 class NcsaTranslator:
     def __init__(self, mapping):
         self.mapping = mapping
