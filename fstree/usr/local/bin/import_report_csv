@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/../configuration/linker.php'
+
+use CCR\DB;
+use CCR\Log;
+
+ini_set('memory_limit',  -1);
+
+try {
+      main();
+} catch (Exception $e) {
+  do {
+            fwrite(STDERR, $e->getMessage() . "\n");
+            fwrite(STDERR, $e->getTraceAsString() . "\n");
+        } while ($e = $e->getPrevious());
+      exit(1);
+}
+  }
+}
+}

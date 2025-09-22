@@ -1,0 +1,32 @@
+{
+  "module": "nairr",
+  "defaults": {
+    "global": {
+      "truncate_destination": false,
+      "namespace": "ETL\\Ingestor",
+      "class": "DatabaseIngestor",
+      "options_class": "IngestorOptions",
+      "load_data_infile_character_set": "utf8",
+      "enabled": true,
+      "endpoints": {
+        "destination": {
+          "type": "mysql",
+          "name": "Job Record/Task database",
+          "config": "datawarehouse",
+          "schema": "modw"
+        }
+      }
+    }
+  },
+  "nairr-report-bootstrap":[
+    {
+      "name": "create-table",
+      "description": "Create table",
+      "namespace": "ETL\\Maintenance",
+      "class": "ManageTables",
+      "options_class": "MaintenanceOptions",
+      "definition_file_list": [
+        "nairr_report/nairr_report.json"
+    }
+  ]
+}
