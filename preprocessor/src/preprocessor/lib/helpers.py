@@ -4,7 +4,28 @@ import re
 import json
 import datetime
 import logging
+import configparser
+import psycopg
 
+def direct_xras_query(query):
+    config = configparser.ConfigParser()
+    config.read('/etc/xdmod/portal_settings.ini')
+    connectstr = "postgresql://{}:{}@{}/{}".format(
+        config['tgcdbmirror']['user'].strip("'"),
+        config['tgcdbmirror']['pass'].strip("'"),
+        config['tgcdbmirror']['host'].strip("'"),
+        config['tgcdbmirror']['database'].strip("'"))
+
+    results = {}
+
+    with psycopg.connect(connectstr) as conn:
+        # Open a cursor to perform database operations
+        with conn.cursor() as cur:
+            cur.execute(query)
+            for row in cur:
+                results[row[0]] = row[1]
+
+    return results
 
 def config(confpath, resource):
 
@@ -73,6 +94,12 @@ class TamuTranslator:
 class NcsaTranslator:
     def __init__(self, mapping):
         self.mapping = mapping
+
+        query = "SELECT site_project_id, LOWER(pro.grant_number) FROM acct.projects_map pm JOIN acct.projects pro ON pro.project_id = pm.project_id WHERE pro.allocations_process_id = 108 AND organization_id = 844"
+
+        for charge_number, project in direct_xras_query(query).items():
+            if charge_number not in self.mapping:
+                self.mapping[charge_number] = project
 
     def translate(self, job, _):
         charge_id = job['account'][0:4]
