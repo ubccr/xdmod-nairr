@@ -1,6 +1,6 @@
 {
   "table_definition": {
-    "name": "nairr-report-access",
+    "name": "nairr_report_access",
     "description": "NAIRR Report Access Table",
     "engine": "InnoDB",
     "charset": "utf8",
