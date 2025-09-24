@@ -7,7 +7,20 @@ import logging
 import configparser
 import psycopg
 
-def direct_xras_query(query):
+def get_acdb_mapping(organization_name):
+
+    query = """
+SELECT LOWER(site_project_id) as site_project_id, LOWER(pro.grant_number) as project_number
+FROM acct.projects_map pm
+JOIN acct.projects pro ON pro.project_id = pm.project_id
+JOIN organizations.organizations o ON o.organization_id = pm.organization_id
+WHERE pro.allocations_process_id = 108
+    AND o.organization_name like %s
+"""
+    return direct_xras_query(query, (organization_name, ))
+
+
+def direct_xras_query(query, params):
     config = configparser.ConfigParser()
     config.read('/etc/xdmod/portal_settings.ini')
     connectstr = "postgresql://{}:{}@{}/{}".format(
@@ -21,7 +34,7 @@ def direct_xras_query(query):
     with psycopg.connect(connectstr) as conn:
         # Open a cursor to perform database operations
         with conn.cursor() as cur:
-            cur.execute(query)
+            cur.execute(query, params)
             for row in cur:
                 results[row[0]] = row[1]
 
@@ -94,12 +107,6 @@ class TamuTranslator:
 class NcsaTranslator:
     def __init__(self, mapping):
         self.mapping = mapping
-
-        query = "SELECT site_project_id, LOWER(pro.grant_number) FROM acct.projects_map pm JOIN acct.projects pro ON pro.project_id = pm.project_id WHERE pro.allocations_process_id = 108 AND organization_id = 844"
-
-        for charge_number, project in direct_xras_query(query).items():
-            if charge_number not in self.mapping:
-                self.mapping[charge_number] = project
 
     def translate(self, job, _):
         charge_id = job['account'][0:4]

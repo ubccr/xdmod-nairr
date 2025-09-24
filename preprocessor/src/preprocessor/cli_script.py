@@ -139,6 +139,16 @@ def main():
 
             mapping[account.lower()] = row[1][conf['project_col']].lower()
 
+    if 'organization' in conf:
+        acdb_mapping = helpers.get_acdb_mapping(conf['organization'])
+        for account, project in acdb_mapping.items():
+            if account in mapping:
+                if mapping[account] != project:
+                    logging.error(f"Mapping dato conflict for {conf['organization']}. {account}, {project} != {mapping[account]}")
+                    return
+            else:
+                mapping[account] = project
+
     if logger.isEnabledFor(logging.DEBUG):
         for m, v in mapping.items():
             logging.debug(f'{m} -> {v}')
