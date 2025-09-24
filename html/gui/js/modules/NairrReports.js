@@ -4,7 +4,7 @@
  * @date 2025-07-14
  *
  * This module displays NAIRR reports fetched from the `/custom_reports/reports` endpoint.
- * It integrates with XDMoD's main tab panel and allows browsing reports by year/month.
+ * State is now stored/restored in the URL hash for robust sharing and SSO.
  */
 
 function buildReportUrl(year, month) {
@@ -21,11 +21,35 @@ function triggerReportDownload(reportId, year, month) {
   window.location.href = url;
 }
 
+// Utility to get params from hash instead of query string
+function getHashParams() {
+  const hash = window.location.hash.split("?")[1] || "";
+  const params = new URLSearchParams(hash);
+  return {
+    year: params.get("year"),
+    month: params.get("month"),
+    report_id: params.get("report_id"),
+  };
+}
+
+// Utility to set params in hash, preserving tab info
+function setHashParams(obj) {
+  // Preserve tab info (e.g. #main_tab_panel:nairr_reports)
+  const pre =
+    window.location.hash.split("?")[0] || "#main_tab_panel:nairr_reports";
+  const params = new URLSearchParams();
+  if (obj.year) params.set("year", obj.year);
+  if (obj.month) params.set("month", obj.month);
+  if (obj.report_id) params.set("report_id", obj.report_id);
+  window.location.hash = `${pre}?${params.toString()}`;
+}
+
 XDMoD.Module.NairrReports = function (config) {
   XDMoD.Module.NairrReports.superclass.constructor.call(this, config);
 };
 
 Ext.apply(XDMoD.Module.NairrReports, {
+  // Accept config and update hash accordingly
   setConfig: function (config, name) {
     Ext.getCmp("main_tab_panel").setActiveTab("nairr_reports");
   },
@@ -39,41 +63,36 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
   reloadReports: function (year, month) {
     var store = Ext.StoreMgr.get("customReportStore");
     if (!store) return;
-
     var mainPanel = Ext.getCmp("nairr_reports_main_panel");
     if (mainPanel) {
       mainPanel.setTitle(`NAIRR Reports for ${month} ${year}`);
     }
-
     store.proxy.conn.url = buildReportUrl(year, month);
     store.load();
   },
 
   initComponent: function () {
     // -----------------------------
-    // Default Params
+    // Default Params: now from hash
     const now = new Date();
-    const urlParams = new URLSearchParams(window.location.search);
-    const defaultYear = urlParams.get("year") || now.getFullYear();
+    let hashParams = getHashParams();
+    const defaultYear = hashParams.year || now.getFullYear();
     const defaultMonth =
-      urlParams.get("month") ||
-      now.toLocaleString("default", { month: "long" });
+      hashParams.month || now.toLocaleString("default", { month: "long" });
+
     const initialUrl = buildReportUrl(defaultYear, defaultMonth);
 
+    // Use hash for constructing report links
     const getCustomReportQueryString = () => {
-      const params = new URLSearchParams(window.location.search);
-      const year = params.get("year") || defaultYear;
-      const month = params.get("month") || defaultMonth;
+      let hashParams = getHashParams();
+      const year = hashParams.year || defaultYear;
+      const month = hashParams.month || defaultMonth;
       const out = [];
       if (year) out.push(`year=${encodeURIComponent(year)}`);
       if (month) out.push(`month=${encodeURIComponent(month)}`);
       return out.length ? "?" + out.join("&") : "";
     };
 
-    // -----------------------------
-    //
-    //
-    //
     const reportStore = new Ext.data.JsonStore({
       autoDestroy: true,
       autoLoad: true,
@@ -160,16 +179,21 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
     reportContainer.on("afterrender", function () {
       reportStore.on("load", function (store, records) {
         reportContainer.updateReports(records);
-        const params = new URLSearchParams(window.location.search);
-        const reportId = params.get("report_id");
+        let hashParams = getHashParams();
+        const reportId = hashParams.report_id;
         if (reportId && records.some((r) => r.data.name === reportId)) {
-          triggerReportDownload(reportId, defaultYear, defaultMonth);
-          const newUrl = new URL(window.location.href);
-          newUrl.searchParams.delete("report_id");
-          window.history.replaceState({}, "", newUrl.toString());
+          triggerReportDownload(
+            reportId,
+            hashParams.year || defaultYear,
+            hashParams.month || defaultMonth,
+          );
+          delete hashParams.report_id;
+          setHashParams(hashParams);
+          // Remove report_id from hash after triggering download
         }
       });
     });
+
     const expandAndSelect = (tree, year, month, clickNode) => {
       const yearNode = tree.getRootNode().findChild("text", String(year));
       if (!yearNode) return;
@@ -196,24 +220,23 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
       listeners: {
         click: (node) => {
           if (!node.isLeaf()) return;
+          let hashParams = getHashParams();
           const year = node.parentNode.text;
           const month = node.text;
           if (reportContainer) reportContainer.body.mask("Loading...");
-
-          const newUrl = new URL(window.location.href);
-          newUrl.searchParams.set("year", year);
-          newUrl.searchParams.set("month", month);
-          window.history.replaceState({}, "", newUrl.toString());
+          hashParams.year = year;
+          hashParams.month = month;
+          setHashParams(hashParams);
           this.reloadReports(year, month);
         },
         render: (tree) => {
           tree.getLoader().on("load", function (loader, node) {
             if (node.isRoot) {
-              const params = new URLSearchParams(window.location.search);
+              let hashParams = getHashParams();
               expandAndSelect(
                 tree,
-                params.get("year") || defaultYear,
-                params.get("month") || defaultMonth,
+                hashParams.year || defaultYear,
+                hashParams.month || defaultMonth,
                 true,
               );
             }
@@ -229,26 +252,25 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
       items: [leftPanel, mainArea],
       listeners: {
         deactivate: () => {
-          const params = new URLSearchParams(window.location.search);
-          const year = params.get("year");
-          const month = params.get("month");
-          if (year && month) this.lastViewState = { year, month };
-          const url = new URL(window.location.href);
-          url.searchParams.delete("year");
-          url.searchParams.delete("month");
-          window.history.replaceState({}, "", url.toString());
+          let hashParams = getHashParams();
+          if (hashParams.year && hashParams.month)
+            this.lastViewState = {
+              year: hashParams.year,
+              month: hashParams.month,
+            };
+          setHashParams({});
         },
         activate: () => {
-          let year = defaultYear;
-          let month = defaultMonth;
+          let hashParams = getHashParams();
+          let year = hashParams.year || defaultYear;
+          let month = hashParams.month || defaultMonth;
           if (this.lastViewState) {
             year = this.lastViewState.year;
             month = this.lastViewState.month;
           }
-          const url = new URL(window.location.href);
-          url.searchParams.set("year", year);
-          url.searchParams.set("month", month);
-          window.history.replaceState({}, "", url.toString());
+          hashParams.year = year;
+          hashParams.month = month;
+          setHashParams(hashParams);
           expandAndSelect(leftPanel, year, month, false);
         },
       },

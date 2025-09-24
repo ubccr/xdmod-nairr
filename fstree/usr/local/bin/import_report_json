@@ -103,7 +103,7 @@ function main()
 
     try {
         $logger->debug('Creating database connections');
-        $db = DB::factory('hpcdb');
+        $db = DB::factory('datawarehouse');
     } catch (Exception $e) {
         $msg = 'Failed to create database connection: ' . $e->getMessage();
         $logger->crit(array(

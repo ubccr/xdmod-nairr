@@ -13,12 +13,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CustomReportControllerProvider extends BaseControllerProvider
 {
-    const LOG_MODULE = 'custom-report-controller';
+    public const LOG_MODULE = 'custom-report-controller';
 
     /**
      * @var LoggerInterface
      */
     private $logger;
+    private $db;
 
     public function __construct(array $params = [])
     {
@@ -31,7 +32,9 @@ class CustomReportControllerProvider extends BaseControllerProvider
                 'mail' => false
             ]
         );
+        $this->db = DB::factory('datawarehouse');
     }
+
 
     /**
      * Set up data warehouse export routes.
@@ -55,7 +58,18 @@ class CustomReportControllerProvider extends BaseControllerProvider
             ->assert('report_id', '(\w|_|-])+');
 
         $controller->get("$root/report-directory", "$current::getReportDirectory");
+        $controller->get("$root/viewable/{report_id}/{user_email}", "$current::getViewable");
+
     }
+
+    public function getViewable(Request $request, Application $app, $report_id, $user_email)
+    {
+        return $app->json(array(
+            'success' => true,
+            'is_viewable' => $this->isViewable($report_id, $user_email)
+        ));
+    }
+
 
     /**
      * Get all the reports available for exporting for the current user.
@@ -221,17 +235,30 @@ class CustomReportControllerProvider extends BaseControllerProvider
 
     private function isViewable($report_id, $user_email)
     {
-        $viewer_config = $this->getViewerConfig();
-        $prefixes = array_keys($viewer_config);
-        $pattern = '/^(' . implode('|', array_map('preg_quote', $prefixes)) . ')/';
+        $sql = "
+    SELECT
+        CASE
+    WHEN EXISTS (
+                SELECT 1
+                FROM modw.nairr_report_access
+                WHERE nairr_report_id = SUBSTRING_INDEX(:report_id, '_v',1) AND user_email = :user_email
+            ) THEN TRUE
+    WHEN NOT EXISTS (
+                SELECT 1
+                FROM modw.nairr_report_access
+                WHERE nairr_report_id = SUBSTRING_INDEX(:report_id, '_v', 1)
+            ) THEN TRUE
+            ELSE FALSE
+    END AS is_viewable
+    ";
 
-        if (preg_match($pattern, $report_id, $matches)) {
-            $matched_prefix = $matches[1];
+        $isViewable = $this->db->query($sql, array(
+            'report_id' => $report_id,
+            'user_email' => $user_email
+    ));
 
-            return in_array($user_email, $viewer_config[$matched_prefix]['viewers']);
-
-        }
-        return true;
+        $this->logger->debug("The Contents of isViewable are: " . print_r($isViewable, true));
+        return (bool) $isViewable[0]['is_viewable'];
 
     }
 
