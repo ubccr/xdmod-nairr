@@ -18,7 +18,14 @@ function triggerReportDownload(reportId, year, month) {
   if (year) qs.push(`year=${encodeURIComponent(year)}`);
   if (month) qs.push(`month=${encodeURIComponent(month)}`);
   const url = `${XDMoD.REST.prependPathBase("/custom_reports/report/")}${reportId}${qs.length ? "?" + qs.join("&") : ""}`;
-  window.location.href = url;
+  let iframe = document.getElementById("nairr_report_download_iframe");
+  if (!iframe) {
+    iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.id = "nairr_report_download_iframe";
+    document.body.appendChild(iframe);
+  }
+  iframe.src = url;
 }
 
 // Utility to get params from hash instead of query string
@@ -79,6 +86,7 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
     const defaultYear = hashParams.year || now.getFullYear();
     const defaultMonth =
       hashParams.month || now.toLocaleString("default", { month: "long" });
+    let pendingReportId = hashParams.report_id || null;
 
     const initialUrl = buildReportUrl(defaultYear, defaultMonth);
 
@@ -177,19 +185,31 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
     });
 
     reportContainer.on("afterrender", function () {
-      reportStore.on("load", function (store, records) {
+      reportStore.on("load", function (store, records, success) {
         reportContainer.updateReports(records);
         let hashParams = getHashParams();
-        const reportId = hashParams.report_id;
-        if (reportId && records.some((r) => r.data.name === reportId)) {
-          triggerReportDownload(
-            reportId,
-            hashParams.year || defaultYear,
-            hashParams.month || defaultMonth,
-          );
-          delete hashParams.report_id;
-          setHashParams(hashParams);
-          // Remove report_id from hash after triggering download
+        if (!success) {
+          console.error("Failed to load reports.");
+          reportContainer.body.update(`
+              <div class="no-reports-container">
+                <div class="no-reports-icon">&#9888;</div>
+                <div class="no-reports-title">Failed to load reports. Please try again.</div>
+              </div>
+            `);
+          return;
+        }
+
+        if (pendingReportId) {
+          const matching = records.find((r) => r.data.name === pendingReportId);
+          if (matching) {
+            triggerReportDownload(
+              pendingReportId,
+              hashParams.year || defaultYear,
+              hashParams.month || defaultMonth,
+            );
+
+            pendingReportId = null;
+          }
         }
       });
     });
@@ -202,7 +222,6 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
         if (!monthNode) return;
         tree.getSelectionModel().select(monthNode);
         monthNode.ensureVisible();
-        if (clickNode) monthNode.fireEvent("click", monthNode);
       });
     };
 
@@ -224,6 +243,7 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
           const year = node.parentNode.text;
           const month = node.text;
           if (reportContainer) reportContainer.body.mask("Loading...");
+          delete hashParams.report_id;
           hashParams.year = year;
           hashParams.month = month;
           setHashParams(hashParams);
@@ -237,7 +257,7 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
                 tree,
                 hashParams.year || defaultYear,
                 hashParams.month || defaultMonth,
-                true,
+                false,
               );
             }
           });
@@ -253,12 +273,13 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
       listeners: {
         deactivate: () => {
           let hashParams = getHashParams();
-          if (hashParams.year && hashParams.month)
+          if (hashParams.year && hashParams.month) {
             this.lastViewState = {
               year: hashParams.year,
               month: hashParams.month,
             };
-          setHashParams({});
+          }
+          setHashParams(hashParams);
         },
         activate: () => {
           let hashParams = getHashParams();

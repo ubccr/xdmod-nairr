@@ -144,7 +144,7 @@ function importJsonReports(array $reports)
     global $db, $logger;
     $logger->debug("Importing JSON reports");
     $sql = "
-      INSERT INTO 
+      INSERT IGNORE INTO 
         modw.nairr_report_access (nairr_report_id, user_email)
       VALUES (:report_name, :viewer)
     ";

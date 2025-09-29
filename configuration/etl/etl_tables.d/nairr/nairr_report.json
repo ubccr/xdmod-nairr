@@ -7,7 +7,7 @@
     "collation": "utf8_general_ci",
     "columns": [
       {
-        "name": "nairr_access_id",
+        "name": "id",
         "type": "int(11)",
         "nullable": false,
         "extra": "auto_increment",
@@ -29,7 +29,12 @@
     "indexes": [
       {
         "name": "PRIMARY",
-        "columns": ["nairr_access_id"]
+        "columns": ["id"]
+      },
+      {
+        "name": "report_email_pk",
+        "columns": ["nairr_report_id", "user_email"],
+        "is_unique": true
       }
     ]
   }

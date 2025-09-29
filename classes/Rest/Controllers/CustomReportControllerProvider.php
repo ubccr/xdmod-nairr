@@ -58,16 +58,6 @@ class CustomReportControllerProvider extends BaseControllerProvider
             ->assert('report_id', '(\w|_|-])+');
 
         $controller->get("$root/report-directory", "$current::getReportDirectory");
-        $controller->get("$root/viewable/{report_id}/{user_email}", "$current::getViewable");
-
-    }
-
-    public function getViewable(Request $request, Application $app, $report_id, $user_email)
-    {
-        return $app->json(array(
-            'success' => true,
-            'is_viewable' => $this->isViewable($report_id, $user_email)
-        ));
     }
 
 
@@ -301,18 +291,6 @@ class CustomReportControllerProvider extends BaseControllerProvider
         $report_config = json_decode($report_config_str, true);
 
         return [$base_path, $report_config];
-    }
-
-    private function getViewerConfig()
-    {
-        $base_path = $this->getBasePath();
-        $viewer_config_str = file_get_contents($base_path . '/report_reviewer.json');
-        $viewer_config = json_decode($viewer_config_str, true);
-        if (!$viewer_config) {
-            throw new Exception("Failed to parse viewer configuration file.");
-        }
-        return $viewer_config;
-
     }
 
 }
