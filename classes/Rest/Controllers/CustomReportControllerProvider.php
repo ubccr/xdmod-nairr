@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CustomReportControllerProvider extends BaseControllerProvider
 {
-    public const LOG_MODULE = 'custom-report-controller';
+    const LOG_MODULE = 'custom-report-controller';
 
     /**
      * @var LoggerInterface
