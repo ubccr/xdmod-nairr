@@ -52,6 +52,7 @@ bower_components
 .bower-tmp
 
 .php-cs-fixer.cache
+.php-cs-fixer.php
 
 httpd/
 
