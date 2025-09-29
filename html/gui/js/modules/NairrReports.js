@@ -2,9 +2,28 @@
  * NAIRR Reports Module for XDMoD Portal
  * @author Alex Tovar
  * @date 2025-07-14
+ * @updated 2025-09-29
  *
- * This module displays NAIRR reports fetched from the `/custom_reports/reports` endpoint.
- * State is now stored/restored in the URL hash for robust sharing and SSO.
+ * This module provides a user interface for browsing and downloading NAIRR custom reports
+ * within the XDMoD Portal. Reports are dynamically fetched from the `/custom_reports/reports`
+ * REST endpoint, and are organized by year and month for ease of navigation.
+ *
+ * Key Features:
+ * - Tree-based directory navigation of reports by year and month.
+ * - Dynamic fetching and display of available reports, including thumbnails and metadata.
+ * - Direct report downloads, triggered via a hidden iframe for seamless user experience.
+ * - URL hash management: The current state (year, month, and optional report ID) is always
+ *   encoded in the URL hash, enabling:
+ *     - Deep linking/bookmarking to specific views or downloads.
+ *     - State restoration on reload or after SSO redirection.
+ *     - Back/forward navigation support.
+ * - User-friendly handling of empty or error states.
+ * - Designed for integration with the Ext JS framework and XDMoD’s existing module system.
+ *
+ * Usage:
+ * - Place this module in the XDMoD Portal.
+ * - Navigating the tree or triggering downloads will update the URL hash accordingly.
+ * - Direct links to a specific report or month/year view are supported and restored on load.
  */
 
 function buildReportUrl(year, month) {
