@@ -11,6 +11,16 @@ use Silex\ControllerCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+
+
+/**
+ * Class CustomReportControllerProvider
+ *
+ * This controller provides access to custom reports generated with NAIRR reports
+ * and stored in a predefined directory structure.
+ *
+ * @author Alex Tovar <rosetova@buffalo.edu>
+ */
 class CustomReportControllerProvider extends BaseControllerProvider
 {
 	const LOG_MODULE = 'custom-report-controller';
@@ -225,21 +235,21 @@ class CustomReportControllerProvider extends BaseControllerProvider
 	private function isViewable($report_id, $user_email)
 	{
 		$sql = "
-    SELECT
-        CASE
-    WHEN EXISTS (
-                SELECT 1
-                FROM modw.nairr_report_access
-                WHERE nairr_report_id = SUBSTRING_INDEX(:report_id, '_v',1) AND user_email = :user_email
-            ) THEN TRUE
-    WHEN NOT EXISTS (
-                SELECT 1
-                FROM modw.nairr_report_access
-                WHERE nairr_report_id = SUBSTRING_INDEX(:report_id, '_v', 1)
-            ) THEN TRUE
-            ELSE FALSE
-    END AS is_viewable
-    ";
+		SELECT
+			CASE
+		WHEN EXISTS (
+			SELECT 1
+			FROM modw.nairr_report_access
+			WHERE nairr_report_id = SUBSTRING_INDEX(:report_id, '_v',1) AND user_email = :user_email
+		) THEN TRUE
+		WHEN NOT EXISTS (
+			SELECT 1
+			FROM modw.nairr_report_access
+			WHERE nairr_report_id = SUBSTRING_INDEX(:report_id, '_v', 1)
+		) THEN TRUE
+		ELSE FALSE
+		END AS is_viewable
+		";
 
 		$isViewable = $this->db->query($sql, array(
 			'report_id' => $report_id,
