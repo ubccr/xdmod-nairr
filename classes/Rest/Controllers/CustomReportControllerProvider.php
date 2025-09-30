@@ -256,7 +256,6 @@ class CustomReportControllerProvider extends BaseControllerProvider
 			'user_email' => $user_email
 		));
 
-		$this->logger->debug("The Contents of isViewable are: " . print_r($isViewable, true));
 		return (bool) $isViewable[0]['is_viewable'];
 	}
 
