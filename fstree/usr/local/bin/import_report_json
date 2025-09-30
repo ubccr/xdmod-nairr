@@ -150,8 +150,6 @@ function importJsonReports(array $reports)
     ";
     foreach ($reports as $reportName => $reportData) {
         $viewers = $reportData['viewers'] ?? [];
-        echo "Report: $reportName\n";
-        echo "  Viewers:\n";
         foreach ($viewers as $viewer) {
             echo "    - $viewer\n";
             // Example of how you might execute the SQL with PDO
