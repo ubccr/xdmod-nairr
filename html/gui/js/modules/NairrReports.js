@@ -305,6 +305,7 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
           setHashParams({});
         },
         activate: () => {
+          this.isRestoringState = true;
           let hashParams = getHashParams();
           this.viewingState = {
             year:
@@ -324,6 +325,7 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
           ) {
             setHashParams(this.viewingState);
           }
+          this.isRestoringState = false;
         },
       },
     });
