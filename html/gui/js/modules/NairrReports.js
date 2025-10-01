@@ -111,7 +111,25 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
 
     const initialUrl = buildReportUrl(defaultYear, defaultMonth);
 
-    // Use hash for constructing report links
+    if (!window._nairrReportsHashHandler) {
+      window._nairrReportsHashHandler = true;
+      window.addEventListener("hashchange", function () {
+        let tabPanel = Ext.getCmp("main_tab_panel");
+        let activeTab = tabPanel ? tabPanel.getActiveTab() : null;
+        if (activeTab) {
+          let params = getHashParams();
+          XDMoD.Module.NairrReports.prototype.reloadReports(
+            params.year,
+            params.month,
+          );
+          if (params.report_id) {
+            triggerReportDownload(params.report_id, params.year, params.month);
+          }
+        }
+      });
+    }
+
+    // Use hash for constructing report links;
     const getCustomReportQueryString = () => {
       let hashParams = getHashParams();
       const year = hashParams.year || defaultYear;
@@ -261,7 +279,6 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
       listeners: {
         click: (node) => {
           if (!node.isLeaf()) return;
-          if (this.isRestoringState) return;
           let hashParams = getHashParams();
           const year = node.parentNode.text;
           const month = node.text;
@@ -296,17 +313,18 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
       listeners: {
         deactivate: () => {
           let hashParams = getHashParams();
-          if (hashParams.year && hashParams.month) {
+          if (hashParams.year && hashParams.month) this.viewingState = null;
+          {
             this.lastViewState = {
               year: hashParams.year,
               month: hashParams.month,
             };
           }
-          setHashParams({});
+          setHashParams(hashParams);
         },
         activate: () => {
-          this.isRestoringState = true;
           let hashParams = getHashParams();
+          console.log("Activating NAIRR Reports with hash params:", hashParams);
           this.viewingState = {
             year:
               hashParams.year ||
@@ -318,14 +336,16 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
               defaultMonth,
             report_id: hashParams.report_id || null,
           };
+
+          console.log("Restored viewing state:", this.viewingState);
           // Only set hash if missing or out of sync
           if (
             hashParams.year !== this.viewingState.year ||
             hashParams.month !== this.viewingState.month
           ) {
+            console.log("Setting hash params to:", this.viewingState);
             setHashParams(this.viewingState);
           }
-          this.isRestoringState = false;
         },
       },
     });
