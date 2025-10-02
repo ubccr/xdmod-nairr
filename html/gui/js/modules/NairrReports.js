@@ -238,7 +238,6 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
       reportStore.on("load", function (store, records, success) {
         reportContainer.updateReports(records);
         let hashParams = getHashParams();
-        expandAndSelect(leftPanel, hashParams.year, hashParams.month, false);
         if (!success) {
           console.error("Failed to load reports.");
           reportContainer.body.update(`
@@ -323,7 +322,6 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
           setHashParams(hashParams);
         },
         activate: () => {
-          if (reportContainer) reportContainer.body.mask("Loading...");
           let hashParams = getHashParams();
           this.viewingState = {
             year:
@@ -344,6 +342,7 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
           ) {
             setHashParams(this.viewingState);
           }
+          expandAndSelect(leftPanel, hashParams.year, hashParams.month, false);
         },
       },
     });
