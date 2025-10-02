@@ -282,7 +282,7 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
           let hashParams = getHashParams();
           const year = node.parentNode.text;
           const month = node.text;
-
+          if (reportContainer) reportContainer.body.mask("Loading...");
           delete hashParams.report_id;
           hashParams.year = year;
           hashParams.month = month;
