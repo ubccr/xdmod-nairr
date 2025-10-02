@@ -324,7 +324,6 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
         },
         activate: () => {
           let hashParams = getHashParams();
-          console.log("Activating NAIRR Reports with hash params:", hashParams);
           this.viewingState = {
             year:
               hashParams.year ||
@@ -337,13 +336,11 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
             report_id: hashParams.report_id || null,
           };
 
-          console.log("Restored viewing state:", this.viewingState);
           // Only set hash if missing or out of sync
           if (
             hashParams.year !== this.viewingState.year ||
             hashParams.month !== this.viewingState.month
           ) {
-            console.log("Setting hash params to:", this.viewingState);
             setHashParams(this.viewingState);
           }
         },
