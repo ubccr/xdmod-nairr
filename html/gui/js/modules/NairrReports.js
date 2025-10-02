@@ -322,6 +322,9 @@ Ext.extend(XDMoD.Module.NairrReports, XDMoD.PortalModule, {
           setHashParams(hashParams);
         },
         activate: () => {
+          if (reportContainer)
+            reportContainer.body.update("") &&
+              reportContainer.body.mask("Loading...");
           let hashParams = getHashParams();
           this.viewingState = {
             year:
