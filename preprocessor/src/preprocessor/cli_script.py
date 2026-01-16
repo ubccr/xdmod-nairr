@@ -29,19 +29,27 @@ def process_anvil(filep, fullpath, filename, dest_dir, _):
     tmpfiles = {}
 
     for line in reader:
-        if not line[5].startswith('ai'):
+        if line[5].startswith('ai') or line[5].startswith('nairr'):
+            print(line[5])
+        else:
             continue
 
         queue = line[3]
         if queue.lower().startswith('gpu'):
             resource = 'Purdue-Anvil-GPU'
+        elif queue.lower().startswith('ai'):
+            resource = 'Purdue-Anvil-AI'
         else:
             resource = 'Purdue-Anvil-CPU'
 
         if len(line) > 26:
             line[25] = "!".join(line[25:])
 
-        line[5] = 'NAIRR' + line[5][2:8]
+        if line[5].startswith('ai'):
+            line[5] = 'NAIRR' + line[5][2:8]
+        elif line[5].startswith('nairr'):
+            line[5] = 'NAIRR' + line[5][5:11]
+            print(line[5])
 
         if resource not in tmpfiles:
             tmpfiles[resource] = tempfile.NamedTemporaryFile(mode="w", encoding="utf=8", delete=False)
