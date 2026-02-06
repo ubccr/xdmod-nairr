@@ -19,6 +19,43 @@ import pandas as pd
 
 from preprocessor.lib import helpers
 
+def process_text(filep, fullpath, filename, dest_dir, translator):
+    delimiter = '|'
+    reader = csv.reader(filep, delimiter=delimiter)
+
+    srcstat = os.stat(fullpath)
+
+    tmpfiles = {}
+
+    for line in reader:
+
+        project, resource = translator.translate(line, fullpath)
+
+        if project is None:
+            continue
+
+        if resource is None:
+            logging.error(f'Unknown resource in {filename}')
+
+        if len(line) > 26:
+            line[25] = "!".join(line[25:])
+
+        line[5] = project
+
+        if resource not in tmpfiles:
+            tmpfiles[resource] = tempfile.NamedTemporaryFile(mode="w", encoding="utf=8", delete=False)
+
+        tmpfiles[resource].write('|'.join(line[0:26]) + "\n")
+
+    for resource, tmpfile in tmpfiles.items():
+        if not os.path.exists(os.path.join(dest_dir, resource)):
+            os.mkdir(os.path.join(dest_dir, resource))
+        tmpname = tmpfile.name
+        tmpfile.close()
+        target = os.path.join(dest_dir, resource, filename)
+        shutil.move(tmpname, target)
+        os.chmod(target, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
+        os.utime(target, (srcstat[stat.ST_ATIME], srcstat[stat.ST_MTIME]))
 
 def process_anvil(filep, fullpath, filename, dest_dir, _):
     delimiter = '|'
@@ -170,6 +207,8 @@ def main():
         trnsl = helpers.TamuTranslator(mapping)
     elif args.resource == 'expanse':
         trnsl = helpers.SdscTranslator(mapping)
+    elif args.resource == 'bridges2':
+        trnsl = helpers.PscTranslator(mapping)
 
     for fullpath, filename in helpers.fileiterator(conf['source_dir'], conf['days'], conf['file_regex']):
 
@@ -180,5 +219,7 @@ def main():
                 process_json(filep, fullpath, filename, conf['dest_dir'], trnsl)
             elif args.resource == 'anvil':
                 process_anvil(filep, fullpath, filename, conf['dest_dir'], mapping)
+            elif args.resource == 'bridges2':
+                process_text(filep, fullpath, filename, conf['dest_dir'], trnsl)
             else:
                 raise Exception('TODO')

@@ -82,6 +82,30 @@ def fileiterator(prefix, age_days, fileregex):
             yield (fullpath, filename)
 
 
+class PscTranslator:
+    def __init__(self, mapping):
+        self.mapping = mapping
+        self.queue_resmap = {
+            "RM": "PSC-Bridges-2-Regular-Memory",
+            "EM": "PSC-Bridges-2-Extreme-Memory",
+            "GPU": "PSC-Bridges-2-GPU"
+        }
+
+    def translate(self, job, _):
+        charge_id = job[5]
+
+        resource = None
+        for qnam, rname in self.queue_resmap.items():
+            if job[3].startswith(qnam):
+                resource = rname
+                break
+
+        if charge_id in self.mapping:
+            return (self.mapping[charge_id], resource)
+
+        return (None, resource)
+
+
 class DgxTranslator:
     def __init__(self, _):
         pass
