@@ -35,11 +35,14 @@ def process_text(filep, fullpath, filename, dest_dir, translator):
             continue
 
         if resource is None:
-            logging.error(f'Unknown resource in {filename}')
+            logging.error(f'Unknown resource in {filename} {line[3]}')
+            continue
 
-        if len(line) > 26:
-            line[25] = "!".join(line[25:])
+        if len(line) > 24:
+            line[23] = "!".join(line[23:])
 
+        line.insert(4, 'N/A') # missing QOS field
+        line.insert(21, '') # missing tres
         line[5] = project
 
         if resource not in tmpfiles:
@@ -67,7 +70,7 @@ def process_anvil(filep, fullpath, filename, dest_dir, _):
 
     for line in reader:
         if line[5].startswith('ai') or line[5].startswith('nairr'):
-            print(line[5])
+            pass
         else:
             continue
 
@@ -86,7 +89,6 @@ def process_anvil(filep, fullpath, filename, dest_dir, _):
             line[5] = 'NAIRR' + line[5][2:8]
         elif line[5].startswith('nairr'):
             line[5] = 'NAIRR' + line[5][5:11]
-            print(line[5])
 
         if resource not in tmpfiles:
             tmpfiles[resource] = tempfile.NamedTemporaryFile(mode="w", encoding="utf=8", delete=False)

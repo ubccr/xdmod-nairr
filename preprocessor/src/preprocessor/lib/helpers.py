@@ -92,7 +92,7 @@ class PscTranslator:
         }
 
     def translate(self, job, _):
-        charge_id = job[5]
+        charge_id = job[4]
 
         resource = None
         for qnam, rname in self.queue_resmap.items():
