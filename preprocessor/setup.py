@@ -38,6 +38,8 @@ setup(
     python_requires='>=3.12, <4',
     install_requires=[
             'pandas',
+            'psycopg',
+            'openpyxl'
         ],
     extras_require={
         # eg:
